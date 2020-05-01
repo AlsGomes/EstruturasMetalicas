@@ -1,7 +1,6 @@
 package br.com.als.classes.calculos.compressao;
 
 import br.com.als.interfaces.Aco;
-import br.com.als.interfaces.Perfil;
 
 public class FlambagemLocalQ {
 

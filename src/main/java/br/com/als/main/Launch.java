@@ -1,8 +1,6 @@
 package br.com.als.main;
 
-import br.com.als.classes.acos.model.AcoMR250;
 import br.com.als.config.JsonWriter;
-import br.com.als.interfaces.Perfil;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;

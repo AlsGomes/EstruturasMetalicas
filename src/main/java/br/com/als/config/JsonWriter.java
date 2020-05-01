@@ -1,6 +1,6 @@
 package br.com.als.config;
 
-import br.com.als.classes.perfis.model.L50x50x3;
+import br.com.als.classes.perfis.model.PerfilModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -16,7 +16,7 @@ public class JsonWriter {
     public static void createJson() throws IOException {
 
         try (Writer writer = new FileWriter(PATH, false)) {
-            L50x50x3 perfil = new L50x50x3();
+            PerfilModel perfil = new PerfilModel();
             gson.toJson(perfil, writer);
         }
     }
