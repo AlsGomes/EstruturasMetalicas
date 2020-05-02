@@ -1,6 +1,11 @@
 package br.com.als.main;
 
+import br.com.als.classes.acos.model.AcoMR250;
+import br.com.als.classes.calculos.compressao.ResistenciaCompressao;
+import br.com.als.classes.perfis.PerfilModel;
+import br.com.als.config.JsonReader;
 import br.com.als.config.JsonWriter;
+import br.com.als.interfaces.Aco;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -15,12 +20,12 @@ public class Launch extends Application {
         stage.setScene(scene);
         stage.show();
 
-//        String pacotePerfis = "br.com.als.classes.perfis.model.";
-//        String perfilSelecionado = "L50x50x3";
-//        String perfilUtilizado = pacotePerfis + perfilSelecionado;
-//
-//        Perfil perfil = (Perfil) Class.forName(perfilUtilizado).getDeclaredConstructor().newInstance();
+//        JsonWriter.createJson();
 
-        JsonWriter.createJson();
+        Aco aco = new AcoMR250();
+        PerfilModel perfilCalculo = JsonReader.read("perfis/L50.8x50.8x3.2.json");
+
+        ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao();
+        System.out.println(resistenciaCompressao.getResistenciaCompressao(perfilCalculo, aco));
     }
 }

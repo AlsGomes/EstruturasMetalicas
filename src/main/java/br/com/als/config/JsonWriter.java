@@ -1,6 +1,6 @@
 package br.com.als.config;
 
-import br.com.als.classes.perfis.model.PerfilModel;
+import br.com.als.classes.perfis.PerfilModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
