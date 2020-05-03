@@ -4,29 +4,63 @@ import br.com.als.classes.anexos.anexof.Grupo;
 
 public class PerfilModel {
 
-    private String nomePerfil = "L50.8x50.8x3.2";
-    private float comprimentoAba = 50.8f;
-    private float areaBruta = 3.10f;
-    private float pesoPorMetro = 2.46f;
-    private float espessuraAba = 3.18f;
-    private float inerciaX = 7.91f;
-    private float inerciaY = 7.91f;
-    private float raioGiracaoMin = 1.02f;
+    private String nomePerfil = "U152x15.6";
+
+    private float espessuraAlma = 7.98f;
+    private float espessuraAba = 8.71f;
+
+    private float alturaAlma = 152.40f;
+
+    private float larguraAlma = alturaAlma - (2 * espessuraAba);
+    private float larguraAba = 51.66f;
+
+    private float esbeltezAlma = larguraAlma / espessuraAlma;
+    private float esbeltezAba = larguraAba / espessuraAba;
+
+
+    private float areaBruta = 19.9f;
+    private float pesoPorMetro = 15.60f;
+    private float inerciaX = 632f;
+    private float inerciaY = 36f;
+    private float raioGiracaoX = 5.63f;
+    private float raioGiracaoY = 1.34f;
+    private float raioGiracaoMin = 1.34f;
     private float inerciaZ = (float) Math.pow(raioGiracaoMin, 2) * areaBruta;
-    private float esbeltez = comprimentoAba / espessuraAba;
 
-    private boolean elementoAA = false;
-    private boolean elementoAL = true;
-
-    private Grupo grupo = Grupo.GRUPO3;
-    private Perfil perfil = Perfil.L;
+    private Grupo grupoAlma = Grupo.GRUPO2;
+    private Grupo grupoAba = Grupo.GRUPO4;
+    private Perfil perfil = Perfil.U;
 
     public String getNomePerfil() {
         return nomePerfil;
     }
 
-    public float getComprimentoAba() {
-        return comprimentoAba;
+    public float getEspessuraAlma() {
+        return espessuraAlma;
+    }
+
+    public float getEspessuraAba() {
+        return espessuraAba;
+    }
+
+    public float getAlturaAlma() {
+        return alturaAlma;
+    }
+
+    public float getLarguraAlma() {
+        return larguraAlma;
+    }
+
+    public float getLarguraAba() {
+        return larguraAba;
+    }
+
+    public float getEsbeltezAlma() {
+        return esbeltezAlma;
+    }
+
+    public float getEsbeltezAba() {
+        return esbeltezAba;
     }
 
     public float getAreaBruta() {
@@ -37,10 +71,6 @@ public class PerfilModel {
         return pesoPorMetro;
     }
 
-    public float getEspessuraAba() {
-        return espessuraAba;
-    }
-
     public float getInerciaX() {
         return inerciaX;
     }
@@ -49,28 +79,28 @@ public class PerfilModel {
         return inerciaY;
     }
 
-    public float getInerciaZ() {
-        return inerciaZ;
+    public float getRaioGiracaoX() {
+        return raioGiracaoX;
+    }
+
+    public float getRaioGiracaoY() {
+        return raioGiracaoY;
     }
 
     public float getRaioGiracaoMin() {
         return raioGiracaoMin;
     }
 
-    public float getEsbeltez() {
-        return esbeltez;
+    public float getInerciaZ() {
+        return inerciaZ;
     }
 
-    public boolean isElementoAA() {
-        return elementoAA;
+    public Grupo getGrupoAlma() {
+        return grupoAlma;
     }
 
-    public boolean isElementoAL() {
-        return elementoAL;
-    }
-
-    public Grupo getGrupo() {
-        return grupo;
+    public Grupo getGrupoAba() {
+        return grupoAba;
     }
 
     public Perfil getPerfil() {

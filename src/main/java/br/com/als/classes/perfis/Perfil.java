@@ -5,5 +5,6 @@ public enum Perfil {
     W,
     H,
     C,
-    U
+    U,
+    T
 }
