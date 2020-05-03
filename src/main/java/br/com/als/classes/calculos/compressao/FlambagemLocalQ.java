@@ -25,11 +25,6 @@ public class FlambagemLocalQ {
         float esbeltez = perfilCalculo.getEsbeltez();
         Grupo grupo = perfilCalculo.getGrupo();
 
-        System.out.println(perfil);
-        System.out.println(esbeltez);
-        System.out.println(grupo);
-        System.out.println("______________________");
-
         switch (perfil) {
             case L:
                 if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(aco, grupo)) {

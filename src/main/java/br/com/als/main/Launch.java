@@ -1,6 +1,7 @@
 package br.com.als.main;
 
 import br.com.als.classes.acos.model.AcoMR250;
+import br.com.als.classes.anexos.anexoe.CoeficienteFlambagem;
 import br.com.als.classes.calculos.compressao.ResistenciaCompressao;
 import br.com.als.classes.perfis.PerfilModel;
 import br.com.als.config.JsonReader;
@@ -20,12 +21,15 @@ public class Launch extends Application {
         stage.setScene(scene);
         stage.show();
 
-//        JsonWriter.createJson();
+//        PerfilModel perfilCalculo = new PerfilModel();
+//        JsonWriter.createJson(perfilCalculo);
 
         Aco aco = new AcoMR250();
-        PerfilModel perfilCalculo = JsonReader.read("perfis/L50.8x50.8x3.2.json");
+        String path = "perfis/%s.json";
+        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "L76.2x76.2x7.9"));
 
         ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao();
-        System.out.println(resistenciaCompressao.getResistenciaCompressao(perfilCalculo, aco));
+        System.out.println(resistenciaCompressao.
+                getResistenciaCompressao(perfilCalculo, aco, CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO, 282.84f));
     }
 }

@@ -9,9 +9,10 @@ public class PerfilModel {
     private float areaBruta = 3.10f;
     private float pesoPorMetro = 2.46f;
     private float espessuraAba = 3.18f;
-    private float inerciaXY = 7.91f;
-    private float inerciaZ;
+    private float inerciaX = 7.91f;
+    private float inerciaY = 7.91f;
     private float raioGiracaoMin = 1.02f;
+    private float inerciaZ = (float) Math.pow(raioGiracaoMin, 2) * areaBruta;
     private float esbeltez = comprimentoAba / espessuraAba;
 
     private boolean elementoAA = false;
@@ -40,8 +41,12 @@ public class PerfilModel {
         return espessuraAba;
     }
 
-    public float getInerciaXY() {
-        return inerciaXY;
+    public float getInerciaX() {
+        return inerciaX;
+    }
+
+    public float getInerciaY() {
+        return inerciaY;
     }
 
     public float getInerciaZ() {

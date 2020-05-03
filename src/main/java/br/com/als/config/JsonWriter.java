@@ -10,12 +10,12 @@ import java.io.Writer;
 
 public class JsonWriter {
 
-    private static final String PATH = "perfis/L50.8x50.8x3.2.json";
+    private static final String PATH = "perfis/%s.json";
     private static Gson gson = new GsonBuilder().create();
 
-    public static void createJson() throws IOException {
+    public static void createJson(PerfilModel perfilCalculo) throws IOException {
 
-        try (Writer writer = new FileWriter(PATH, false)) {
+        try (Writer writer = new FileWriter(String.format(PATH, perfilCalculo.getNomePerfil()), false)) {
             PerfilModel perfil = new PerfilModel();
             gson.toJson(perfil, writer);
         }
