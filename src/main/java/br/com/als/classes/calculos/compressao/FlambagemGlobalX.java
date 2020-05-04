@@ -1,5 +1,6 @@
 package br.com.als.classes.calculos.compressao;
 
+import br.com.als.classes.acos.moduloelasticidade.ModuloElasticidadeAco;
 import br.com.als.classes.anexos.anexoe.CoeficienteFlambagem;
 import br.com.als.classes.perfis.Perfil;
 import br.com.als.classes.perfis.PerfilModel;
@@ -7,9 +8,9 @@ import br.com.als.interfaces.Aco;
 
 public class FlambagemGlobalX {
 
-    public float getX(PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPecaCm) {
+    public float getX(PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPecaCm, ModuloElasticidadeAco moduloElasticidadeAco) {
 
-        float moduloElasticidadeKNcm2 = aco.getModuloElasticidade() * 100;
+        float moduloElasticidadeKNcm2 = moduloElasticidadeAco.getModuloElasticidadeKNcm2();
         float tensaoEscoamentoKNcm2 = aco.getTensaoEscoamento() / 10;
         float le = vinculo.getCoeficienteFlambagem() * comprimentoPecaCm;
 
@@ -21,7 +22,7 @@ public class FlambagemGlobalX {
         }
 
         float cargaCriticaEuler = (float) ((Math.pow(Math.PI, 2) * moduloElasticidadeKNcm2 * momentoInercia) / Math.pow(le, 2));
-        float q = new FlambagemLocalQ().getQ(perfilCalculo, aco);
+        float q = new FlambagemLocalQ().getQ(perfilCalculo, aco, moduloElasticidadeAco);
         float areaBruta = perfilCalculo.getAreaBruta();
         float indiceEsbeltez = (float) Math.sqrt((q * areaBruta * tensaoEscoamentoKNcm2) / (cargaCriticaEuler));
 

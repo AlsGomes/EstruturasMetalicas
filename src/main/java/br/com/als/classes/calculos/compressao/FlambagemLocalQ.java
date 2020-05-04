@@ -1,5 +1,6 @@
 package br.com.als.classes.calculos.compressao;
 
+import br.com.als.classes.acos.moduloelasticidade.ModuloElasticidadeAco;
 import br.com.als.classes.anexos.anexof.Grupo;
 import br.com.als.classes.perfis.Perfil;
 import br.com.als.classes.perfis.PerfilModel;
@@ -7,13 +8,13 @@ import br.com.als.interfaces.Aco;
 
 public class FlambagemLocalQ {
 
-    public float getQ(PerfilModel perfilCalculo, Aco aco) {
-        return getQs(perfilCalculo, aco) * getQa(perfilCalculo, aco);
+    public float getQ(PerfilModel perfilCalculo, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
+        return getQs(perfilCalculo, aco, moduloElasticidadeAco) * getQa(perfilCalculo, aco, moduloElasticidadeAco);
     }
 
-    private float getQa(PerfilModel perfilCalculo, Aco aco) {
+    private float getQa(PerfilModel perfilCalculo, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
         float qa = 1;
-        float moduloElasticidadeKNcm2 = aco.getModuloElasticidade() * 100;
+        float moduloElasticidadeKNcm2 = moduloElasticidadeAco.getModuloElasticidadeKNcm2();
         float tensaoEscoamentoKNcm2 = aco.getTensaoEscoamento() / 10;
 
         Perfil perfil = perfilCalculo.getPerfil();
@@ -31,7 +32,7 @@ public class FlambagemLocalQ {
                 break;
             case U:
                 Grupo grupoAlma = perfilCalculo.getGrupoAlma();
-                if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(aco, grupoAlma)) {
+                if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(aco, grupoAlma, moduloElasticidadeAco)) {
                     qa = 1;
                 } else {
                     float areaBruta = perfilCalculo.getAreaBruta();
@@ -53,10 +54,10 @@ public class FlambagemLocalQ {
 
     }
 
-    private float getQs(PerfilModel perfilCalculo, Aco aco) {
+    private float getQs(PerfilModel perfilCalculo, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
 
         float qs = 1;
-        float moduloElasticidadeKNcm2 = aco.getModuloElasticidade() * 100;
+        float moduloElasticidadeKNcm2 = moduloElasticidadeAco.getModuloElasticidadeKNcm2();
         float tensaoEscoamentoKNcm2 = aco.getTensaoEscoamento() / 10;
 
         Perfil perfil = perfilCalculo.getPerfil();
@@ -67,10 +68,10 @@ public class FlambagemLocalQ {
             case L:
                 grupo = perfilCalculo.getGrupoAba();
                 esbeltez = perfilCalculo.getEsbeltezAba();
-                if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(aco, grupo)) {
+                if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(aco, grupo, moduloElasticidadeAco)) {
                     qs = 1;
                 } else {
-                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(aco, grupo)) {
+                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(aco, grupo, moduloElasticidadeAco)) {
                         qs = (float) (1.340 - (0.76 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / moduloElasticidadeKNcm2)));
                     } else {
                         qs = (float) ((0.53 * moduloElasticidadeKNcm2) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
@@ -86,10 +87,10 @@ public class FlambagemLocalQ {
             case U:
                 grupo = perfilCalculo.getGrupoAba();
                 esbeltez = perfilCalculo.getEsbeltezAba();
-                if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(aco, grupo)) {
+                if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(aco, grupo, moduloElasticidadeAco)) {
                     qs = 1;
                 } else {
-                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(aco, grupo)) {
+                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(aco, grupo, moduloElasticidadeAco)) {
                         qs = (float) (1.415 - (0.74 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / moduloElasticidadeKNcm2)));
                     } else {
                         qs = (float) ((0.69 * moduloElasticidadeKNcm2) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));

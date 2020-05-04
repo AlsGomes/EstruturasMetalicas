@@ -1,6 +1,7 @@
 package br.com.als.main;
 
 import br.com.als.classes.acos.model.AcoMR250;
+import br.com.als.classes.acos.moduloelasticidade.ModuloElasticidadeAco;
 import br.com.als.classes.anexos.anexoe.CoeficienteFlambagem;
 import br.com.als.classes.calculos.compressao.ResistenciaCompressao;
 import br.com.als.classes.perfis.PerfilModel;
@@ -30,6 +31,6 @@ public class Launch extends Application {
 
         ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao();
         System.out.println(resistenciaCompressao.
-                getResistenciaCompressao(perfilCalculo, aco, CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO, 200f));
+                getResistenciaCompressao(perfilCalculo, aco, CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO, 200f, ModuloElasticidadeAco.GPa200));
     }
 }

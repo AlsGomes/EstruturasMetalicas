@@ -2,9 +2,9 @@ package br.com.als.classes.acos.model;
 
 import br.com.als.interfaces.Aco;
 
-public class AcoMR250 implements Aco {
+public class ASTMA36 implements Aco {
 
-    private String denominacao = "MR 250";
+    private String denominacao = "ASTM A36";
 
     private float tensaoEscoamento = 250f;
     private float tensaoRuptura = 400f;
