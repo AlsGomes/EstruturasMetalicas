@@ -46,7 +46,7 @@ public class LimiteEsbeltez {
             case GRUPO1:
                 esbeltez = (float) (1.40 * Math.sqrt(moduloElasticidadeAco.getModuloElasticidadeKNcm2() / tensaoEscoamentoKNcm2));
                 break;
-            //                FALTA CALCULAR GRUPO 1
+            //                FALTA CALCULAR GRUPO 2
             case GRUPO2:
                 esbeltez = (float) (1.49 * Math.sqrt(moduloElasticidadeAco.getModuloElasticidadeKNcm2() / tensaoEscoamentoKNcm2));
                 break;

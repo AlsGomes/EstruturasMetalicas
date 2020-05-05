@@ -4,32 +4,37 @@ import br.com.als.classes.anexos.anexof.Grupo;
 
 public class PerfilModel {
 
-    private String nomePerfil = "U152x15.6";
+    private String nomePerfil = "H400x8.0";
 
-    private float espessuraAlma = 7.98f;
-    private float espessuraAba = 8.71f;
+    private float espessuraAlma = 8f;
+    private float espessuraAba;
+    private float espessuraMesa = 8f;
 
-    private float alturaAlma = 152.40f;
+    private float alturaAlma = 416f;
 
-    private float larguraAlma = alturaAlma - (2 * espessuraAba);
-    private float larguraAba = 51.66f;
+    private float larguraAlma = alturaAlma - (2 * espessuraMesa);
+    private float larguraAba;
+    private float larguraMesa = 300f;
 
     private float esbeltezAlma = larguraAlma / espessuraAlma;
-    private float esbeltezAba = larguraAba / espessuraAba;
+    private float esbeltezAba;
+    private float esbeltezMesa = (larguraMesa / 2) / espessuraMesa;
 
 
-    private float areaBruta = 19.9f;
-    private float pesoPorMetro = 15.60f;
-    private float inerciaX = 632f;
-    private float inerciaY = 36f;
-    private float raioGiracaoX = 5.63f;
-    private float raioGiracaoY = 1.34f;
-    private float raioGiracaoMin = 1.34f;
-    private float inerciaZ = (float) Math.pow(raioGiracaoMin, 2) * areaBruta;
+    private float areaBruta = (2 * ((espessuraMesa / 10) * (larguraMesa / 10))) + ((larguraAlma / 10) * (espessuraMesa / 10));
+    private float pesoPorMetro;
+    private float inerciaX = 24244.91f;
+    private float inerciaY = 3601.71f;
+    private float raioGiracaoX;
+    private float raioGiracaoY;
+    private float raioGiracaoMin;
+    private float inerciaZ;
+//    private float inerciaZ = (float) Math.pow(raioGiracaoMin, 2) * areaBruta;
 
     private Grupo grupoAlma = Grupo.GRUPO2;
-    private Grupo grupoAba = Grupo.GRUPO4;
-    private Perfil perfil = Perfil.U;
+    private Grupo grupoAba;
+    private Grupo grupoMesa = Grupo.GRUPO5;
+    private Perfil perfil = Perfil.H;
 
     public String getNomePerfil() {
         return nomePerfil;
@@ -41,6 +46,10 @@ public class PerfilModel {
 
     public float getEspessuraAba() {
         return espessuraAba;
+    }
+
+    public float getEspessuraMesa() {
+        return espessuraMesa;
     }
 
     public float getAlturaAlma() {
@@ -55,12 +64,20 @@ public class PerfilModel {
         return larguraAba;
     }
 
+    public float getLarguraMesa() {
+        return larguraMesa;
+    }
+
     public float getEsbeltezAlma() {
         return esbeltezAlma;
     }
 
     public float getEsbeltezAba() {
         return esbeltezAba;
+    }
+
+    public float getEsbeltezMesa() {
+        return esbeltezMesa;
     }
 
     public float getAreaBruta() {
@@ -101,6 +118,10 @@ public class PerfilModel {
 
     public Grupo getGrupoAba() {
         return grupoAba;
+    }
+
+    public Grupo getGrupoMesa() {
+        return grupoMesa;
     }
 
     public Perfil getPerfil() {
