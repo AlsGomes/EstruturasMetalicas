@@ -127,4 +127,33 @@ public class PerfilModel {
     public Perfil getPerfil() {
         return perfil;
     }
+
+    @Override
+    public String toString() {
+        return "PerfilModel{" +
+                "nomePerfil='" + nomePerfil + '\'' +
+                ", espessuraAlma=" + espessuraAlma +
+                ", espessuraAba=" + espessuraAba +
+                ", espessuraMesa=" + espessuraMesa +
+                ", alturaAlma=" + alturaAlma +
+                ", larguraAlma=" + larguraAlma +
+                ", larguraAba=" + larguraAba +
+                ", larguraMesa=" + larguraMesa +
+                ", esbeltezAlma=" + esbeltezAlma +
+                ", esbeltezAba=" + esbeltezAba +
+                ", esbeltezMesa=" + esbeltezMesa +
+                ", areaBruta=" + areaBruta +
+                ", pesoPorMetro=" + pesoPorMetro +
+                ", inerciaX=" + inerciaX +
+                ", inerciaY=" + inerciaY +
+                ", raioGiracaoX=" + raioGiracaoX +
+                ", raioGiracaoY=" + raioGiracaoY +
+                ", raioGiracaoMin=" + raioGiracaoMin +
+                ", inerciaZ=" + inerciaZ +
+                ", grupoAlma=" + grupoAlma +
+                ", grupoAba=" + grupoAba +
+                ", grupoMesa=" + grupoMesa +
+                ", perfil=" + perfil +
+                '}';
+    }
 }

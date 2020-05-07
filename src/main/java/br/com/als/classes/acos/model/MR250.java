@@ -2,7 +2,7 @@ package br.com.als.classes.acos.model;
 
 import br.com.als.interfaces.Aco;
 
-public class AcoMR250 implements Aco {
+public class MR250 implements Aco {
 
     private String denominacao = "MR 250";
 

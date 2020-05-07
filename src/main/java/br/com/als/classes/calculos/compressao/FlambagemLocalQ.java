@@ -21,38 +21,45 @@ public class FlambagemLocalQ {
         Perfil perfil = perfilCalculo.getPerfil();
         float esbeltez = perfilCalculo.getEsbeltezAlma();
 
+//        System.out.println("PERFIL " + perfil);
+//        System.out.println("ESBELTEZ ALMA QA " + esbeltez);
+
         switch (perfil) {
             case L:
                 qa = 1;
                 break;
             case W:
                 break;
-            case H:
-                break;
-            case C:
-                break;
             case U:
+            case H:
                 Grupo grupoAlma = perfilCalculo.getGrupoAlma();
+//                System.out.println("GRUPO DA ALMA " + grupoAlma);
                 if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupoAlma, moduloElasticidadeAco)) {
                     qa = 1;
                 } else {
                     float areaBruta = perfilCalculo.getAreaBruta();
                     float coeficienteCa = 0.34f;
                     float tensao = tensaoEscoamentoKNcm2;
-                    float larguraEfetiva = (float) (1.92 * perfilCalculo.getEspessuraAlma() * Math.sqrt(moduloElasticidadeKNcm2 / tensao)
-                            * (1 - ((coeficienteCa / (perfilCalculo.getLarguraAlma() / perfilCalculo.getEspessuraAlma())) *
+                    float larguraEfetiva = (float) (1.92 * (perfilCalculo.getEspessuraAlma() / 10) * Math.sqrt(moduloElasticidadeKNcm2 / tensao)
+                            * (1 - ((coeficienteCa / ((perfilCalculo.getLarguraAlma() / 10) / (perfilCalculo.getEspessuraAlma() / 10))) *
                             Math.sqrt(moduloElasticidadeKNcm2 / tensao))));
-                    float areaEfetiva = areaBruta - ((perfilCalculo.getLarguraAlma() - larguraEfetiva) * perfilCalculo.getEspessuraAlma());
+                    float areaEfetiva = areaBruta - (((perfilCalculo.getLarguraAlma() / 10) - larguraEfetiva) * (perfilCalculo.getEspessuraAlma() / 10));
+
+//                    System.out.println("LARGURA EFETIVA " + larguraEfetiva);
+//                    System.out.println("AREA EFETIVA " + areaEfetiva);
 
                     qa = areaEfetiva / areaBruta;
                 }
+                break;
+
+            case C:
                 break;
             case T:
                 break;
         }
 
+//        System.out.println("qa " + qa);
         return qa;
-
     }
 
     private float getQs(PerfilModel perfilCalculo, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
@@ -68,14 +75,21 @@ public class FlambagemLocalQ {
         switch (perfil) {
             case L:
                 grupo = perfilCalculo.getGrupoAba();
-                esbeltez = perfilCalculo.getEsbeltezAba();
-                if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
-                    qs = 1;
-                } else {
-                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
-                        qs = (float) (1.340 - (0.76 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / moduloElasticidadeKNcm2)));
+                if (grupo.equals(Grupo.GRUPO3)) {
+
+                    esbeltez = perfilCalculo.getEsbeltezAba();
+                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                        qs = 1;
                     } else {
-                        qs = (float) ((0.53 * moduloElasticidadeKNcm2) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
+                        if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                            qs = (float) (1.340 - (0.76 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / moduloElasticidadeKNcm2)));
+                        } else {
+                            qs = (float) ((0.53 * moduloElasticidadeKNcm2) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
+                        }
+                    }
+                } else {
+                    if (grupo.equals(Grupo.GRUPO4)) {
+//                        FALTA CALCULAR QS QUANDO O PERFIL SE ENCAIXA NO GRUPO 4 (PERFIL L)
                     }
                 }
                 break;
@@ -128,6 +142,7 @@ public class FlambagemLocalQ {
                 break;
         }
 
+//        System.out.println("qs " + qs);
         return qs;
     }
 }
