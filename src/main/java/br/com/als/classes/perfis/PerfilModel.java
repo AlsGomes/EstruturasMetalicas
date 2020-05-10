@@ -4,17 +4,17 @@ import br.com.als.classes.anexos.anexof.Grupo;
 
 public class PerfilModel {
 
-    private String nomePerfil = "H280x6.0";
+    private String nomePerfil = "W310x38.7";
 
-    private float espessuraAlma = 6f;
+    private float espessuraAlma = 5.8f;
     private float espessuraAba;
-    private float espessuraMesa = 6f;
+    private float espessuraMesa = 9.7f;
 
-    private float alturaAlma = 292f;
+    private float alturaAlma = 310f;
 
     private float larguraAlma = alturaAlma - (2 * espessuraMesa);
     private float larguraAba;
-    private float larguraMesa = 240f;
+    private float larguraMesa = 165f;
 
     private float esbeltezAlma = larguraAlma / espessuraAlma;
     private float esbeltezAba;
@@ -22,9 +22,9 @@ public class PerfilModel {
 
 
     private float areaBruta = (2 * ((espessuraMesa / 10) * (larguraMesa / 10))) + ((larguraAlma / 10) * (espessuraMesa / 10));
-    private float pesoPorMetro;
-    private float inerciaX = 6987.78f;
-    private float inerciaY = 1382.90f;
+    private float pesoPorMetro = 38.7f;
+    private float inerciaX = 8581f;
+    private float inerciaY = 727f;
     private float raioGiracaoX;
     private float raioGiracaoY;
     private float raioGiracaoMin;
@@ -33,8 +33,8 @@ public class PerfilModel {
 
     private Grupo grupoAlma = Grupo.GRUPO2;
     private Grupo grupoAba;
-    private Grupo grupoMesa = Grupo.GRUPO5;
-    private Perfil perfil = Perfil.H;
+    private Grupo grupoMesa = Grupo.GRUPO4;
+    private Perfil perfil = Perfil.W;
 
     public String getNomePerfil() {
         return nomePerfil;

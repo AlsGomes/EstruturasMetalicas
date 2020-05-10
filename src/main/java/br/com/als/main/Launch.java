@@ -1,6 +1,7 @@
 package br.com.als.main;
 
 import br.com.als.classes.acos.model.ASTMA36;
+import br.com.als.classes.acos.model.G35;
 import br.com.als.classes.acos.moduloelasticidade.ModuloElasticidadeAco;
 import br.com.als.classes.anexos.anexoe.CoeficienteFlambagem;
 import br.com.als.classes.calculos.compressao.ResistenciaCompressao;
@@ -25,9 +26,9 @@ public class Launch extends Application {
 //        PerfilModel perfilCalculo = new PerfilModel();
 //        JsonWriter.createJson(perfilCalculo);
 
-        Aco aco = new ASTMA36();
+        Aco aco = new G35();
         String path = "perfis/%s.json";
-        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "H280x6.0"));
+        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "W310x38.7"));
 
 //        System.out.println(perfilCalculo.getInerciaX());
 //        System.out.println(perfilCalculo);
@@ -36,6 +37,6 @@ public class Launch extends Application {
         ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao();
         System.out.println(resistenciaCompressao.
                 getResistenciaCompressao(perfilCalculo, aco, CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO,
-                        650f, ModuloElasticidadeAco.GPa205));
+                        600f, ModuloElasticidadeAco.GPa200));
     }
 }

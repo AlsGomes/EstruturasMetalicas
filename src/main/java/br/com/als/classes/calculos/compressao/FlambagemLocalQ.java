@@ -25,11 +25,12 @@ public class FlambagemLocalQ {
 //        System.out.println("ESBELTEZ ALMA QA " + esbeltez);
 
         switch (perfil) {
+            case T:
             case L:
                 qa = 1;
                 break;
             case W:
-                break;
+            case I:
             case U:
             case H:
                 Grupo grupoAlma = perfilCalculo.getGrupoAlma();
@@ -51,11 +52,6 @@ public class FlambagemLocalQ {
                     qa = areaEfetiva / areaBruta;
                 }
                 break;
-
-            case C:
-                break;
-            case T:
-                break;
         }
 
 //        System.out.println("qa " + qa);
@@ -75,9 +71,9 @@ public class FlambagemLocalQ {
         switch (perfil) {
             case L:
                 grupo = perfilCalculo.getGrupoAba();
-                if (grupo.equals(Grupo.GRUPO3)) {
+                esbeltez = perfilCalculo.getEsbeltezAba();
 
-                    esbeltez = perfilCalculo.getEsbeltezAba();
+                if (grupo.equals(Grupo.GRUPO3) || grupo.equals(Grupo.GRUPO4)) {
                     if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
                         qs = 1;
                     } else {
@@ -87,14 +83,11 @@ public class FlambagemLocalQ {
                             qs = (float) ((0.53 * moduloElasticidadeKNcm2) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
                         }
                     }
-                } else {
-                    if (grupo.equals(Grupo.GRUPO4)) {
-//                        FALTA CALCULAR QS QUANDO O PERFIL SE ENCAIXA NO GRUPO 4 (PERFIL L)
-                    }
                 }
                 break;
+
             case W:
-                break;
+            case I:
             case H:
                 grupo = perfilCalculo.getGrupoMesa();
                 esbeltez = perfilCalculo.getEsbeltezMesa();
@@ -112,18 +105,34 @@ public class FlambagemLocalQ {
                     }
                 } else {
                     if (grupo.equals(Grupo.GRUPO4)) {
-//                        FALTA CALCULAR QS QUANDO O PERFIL SE ENCAIXA NO GRUPO 4 (PERFIL H)
+                        if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                            qs = 1;
+                        } else {
+                            if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                                qs = (float) (1.415 - (0.74 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / (moduloElasticidadeKNcm2))));
+                            } else {
+                                qs = (float) ((0.69 * moduloElasticidadeKNcm2) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
+                            }
+                        }
                     }
                 }
-                break;
-            case C:
                 break;
             case U:
                 grupo = perfilCalculo.getGrupoAba();
                 esbeltez = perfilCalculo.getEsbeltezAba();
 
                 if (grupo.equals(Grupo.GRUPO5)) {
-//                        FALTA CALCULAR QS QUANDO O PERFIL SE ENCAIXA NO GRUPO 5 (PERFIL U)
+                    float kc = CoeficienteKcGrupo5.getKc(perfilCalculo);
+
+                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                        qs = 1;
+                    } else {
+                        if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                            qs = (float) (1.415 - (0.65 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / (kc * moduloElasticidadeKNcm2))));
+                        } else {
+                            qs = (float) ((0.90 * moduloElasticidadeKNcm2 * kc) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
+                        }
+                    }
                 } else {
                     if (grupo.equals(Grupo.GRUPO4)) {
                         if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
@@ -139,6 +148,53 @@ public class FlambagemLocalQ {
                 }
                 break;
             case T:
+                Grupo grupoAba = perfilCalculo.getGrupoAba();
+                Grupo grupoAlma = perfilCalculo.getGrupoAlma();
+
+                float esbeltezAlma = perfilCalculo.getEsbeltezAlma();
+                float esbeltezAba = perfilCalculo.getEsbeltezAba();
+
+                float qsAlma = 1f;
+                float qsAba = 1f;
+
+                if (grupoAlma.equals(Grupo.GRUPO6)) {
+                    if (esbeltezAlma < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupoAlma, moduloElasticidadeAco)) {
+                        qsAlma = 1;
+                    } else {
+                        if (esbeltezAlma < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupoAlma, moduloElasticidadeAco)) {
+                            qsAlma = (float) (1.908 - (1.22 * esbeltezAlma * Math.sqrt(tensaoEscoamentoKNcm2 / moduloElasticidadeKNcm2)));
+                        } else {
+                            qsAlma = (float) ((0.69 * moduloElasticidadeKNcm2) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltezAlma, 2)));
+                        }
+                    }
+                }
+
+                if (grupoAba.equals(Grupo.GRUPO4)) {
+                    if (esbeltezAba < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupoAba, moduloElasticidadeAco)) {
+                        qsAba = 1;
+                    } else {
+                        if (esbeltezAba < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupoAba, moduloElasticidadeAco)) {
+                            qsAba = (float) (1.415 - (0.74 * esbeltezAba * Math.sqrt(tensaoEscoamentoKNcm2 / moduloElasticidadeKNcm2)));
+                        } else {
+                            qsAba = (float) ((0.69 * moduloElasticidadeKNcm2) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltezAba, 2)));
+                        }
+                    }
+                } else if (grupoAba.equals(Grupo.GRUPO5)) {
+                    float kc = CoeficienteKcGrupo5.getKc(perfilCalculo);
+
+                    if (esbeltezAba < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupoAba, moduloElasticidadeAco)) {
+                        qsAba = 1;
+                    } else {
+                        if (esbeltezAba < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupoAba, moduloElasticidadeAco)) {
+                            qsAba = (float) (1.415 - (0.65 * esbeltezAba * Math.sqrt(tensaoEscoamentoKNcm2 / (kc * moduloElasticidadeKNcm2))));
+                        } else {
+                            qsAba = (float) ((0.90 * moduloElasticidadeKNcm2 * kc) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltezAba, 2)));
+                        }
+                    }
+                }
+
+                qs = Math.min(qsAlma, qsAba);
+
                 break;
         }
 
