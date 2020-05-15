@@ -20,6 +20,8 @@ public class PerfilModel {
     private float esbeltezAba;
     private float esbeltezMesa = (larguraMesa / 2) / espessuraMesa;
 
+    private float moduloResistenciaWx = 553.6f;
+    private float moduloResistenciaWy = 88.1f;
 
     private float areaBruta = (2 * ((espessuraMesa / 10) * (larguraMesa / 10))) + ((larguraAlma / 10) * (espessuraMesa / 10));
     private float pesoPorMetro = 38.7f;
@@ -126,6 +128,14 @@ public class PerfilModel {
 
     public Perfil getPerfil() {
         return perfil;
+    }
+
+    public float getModuloResistenciaWx() {
+        return moduloResistenciaWx;
+    }
+
+    public float getModuloResistenciaWy() {
+        return moduloResistenciaWy;
     }
 
     @Override

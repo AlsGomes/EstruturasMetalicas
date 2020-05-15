@@ -23,20 +23,20 @@ public class Launch extends Application {
         stage.setScene(scene);
         stage.show();
 
-//        PerfilModel perfilCalculo = new PerfilModel();
-//        JsonWriter.createJson(perfilCalculo);
+        PerfilModel perfilCalculo = new PerfilModel();
+        JsonWriter.createJson(perfilCalculo);
 
-        Aco aco = new G35();
-        String path = "perfis/%s.json";
-        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "W310x38.7"));
+//        Aco aco = new G35();
+//        String path = "perfis/%s.json";
+//        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "W310x38.7"));
 
 //        System.out.println(perfilCalculo.getInerciaX());
 //        System.out.println(perfilCalculo);
 //        System.out.println(aco);
 
-        ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao();
-        System.out.println(resistenciaCompressao.
-                getResistenciaCompressao(perfilCalculo, aco, CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO,
-                        600f, ModuloElasticidadeAco.GPa200));
+//        ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao();
+//        System.out.println(resistenciaCompressao.
+//                getResistenciaCompressao(perfilCalculo, aco, CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO,
+//                        600f, ModuloElasticidadeAco.GPa200));
     }
 }

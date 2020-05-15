@@ -89,6 +89,7 @@ public class FlambagemLocalQ {
             case W:
             case I:
             case H:
+            case U:
                 grupo = perfilCalculo.getGrupoMesa();
                 esbeltez = perfilCalculo.getEsbeltezMesa();
                 if (grupo.equals(Grupo.GRUPO5)) {
@@ -117,36 +118,7 @@ public class FlambagemLocalQ {
                     }
                 }
                 break;
-            case U:
-                grupo = perfilCalculo.getGrupoAba();
-                esbeltez = perfilCalculo.getEsbeltezAba();
 
-                if (grupo.equals(Grupo.GRUPO5)) {
-                    float kc = CoeficienteKcGrupo5.getKc(perfilCalculo);
-
-                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
-                        qs = 1;
-                    } else {
-                        if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
-                            qs = (float) (1.415 - (0.65 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / (kc * moduloElasticidadeKNcm2))));
-                        } else {
-                            qs = (float) ((0.90 * moduloElasticidadeKNcm2 * kc) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
-                        }
-                    }
-                } else {
-                    if (grupo.equals(Grupo.GRUPO4)) {
-                        if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
-                            qs = 1;
-                        } else {
-                            if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
-                                qs = (float) (1.415 - (0.74 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / moduloElasticidadeKNcm2)));
-                            } else {
-                                qs = (float) ((0.69 * moduloElasticidadeKNcm2) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
-                            }
-                        }
-                    }
-                }
-                break;
             case T:
                 Grupo grupoAba = perfilCalculo.getGrupoAba();
                 Grupo grupoAlma = perfilCalculo.getGrupoAlma();
