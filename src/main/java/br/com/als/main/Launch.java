@@ -2,6 +2,7 @@ package br.com.als.main;
 
 import br.com.als.classes.acos.model.ASTMA36;
 import br.com.als.classes.acos.model.G35;
+import br.com.als.classes.acos.model.MR250;
 import br.com.als.classes.acos.moduloelasticidade.ModuloElasticidadeAco;
 import br.com.als.classes.anexos.anexoe.CoeficienteFlambagem;
 import br.com.als.classes.calculos.compressao.ResistenciaCompressao;
@@ -9,6 +10,7 @@ import br.com.als.classes.perfis.PerfilModel;
 import br.com.als.config.JsonReader;
 import br.com.als.config.JsonWriter;
 import br.com.als.interfaces.Aco;
+import br.com.als.reports.compressao.ReportCompressao;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -23,20 +25,24 @@ public class Launch extends Application {
         stage.setScene(scene);
         stage.show();
 
-        PerfilModel perfilCalculo = new PerfilModel();
-        JsonWriter.createJson(perfilCalculo);
+//        PerfilModel perfilCalculo = new PerfilModel();
+//        JsonWriter.createJson(perfilCalculo);
 
-//        Aco aco = new G35();
-//        String path = "perfis/%s.json";
-//        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "W310x38.7"));
+        Aco aco = new MR250();
+        String path = "perfis/%s.json";
+        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "L76X10.7"));
 
-//        System.out.println(perfilCalculo.getInerciaX());
-//        System.out.println(perfilCalculo);
-//        System.out.println(aco);
+        ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao(
+                perfilCalculo
+                , aco
+                , CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO
+                , 250f
+                , ModuloElasticidadeAco.GPa200
+        );
 
-//        ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao();
-//        System.out.println(resistenciaCompressao.
-//                getResistenciaCompressao(perfilCalculo, aco, CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO,
-//                        600f, ModuloElasticidadeAco.GPa200));
+        ReportCompressao reportCompressao = new ReportCompressao(resistenciaCompressao);
+        reportCompressao.exportarRelatorio();
+
+//        System.out.println(resistenciaCompressao.getResistenciaCompressao());
     }
 }

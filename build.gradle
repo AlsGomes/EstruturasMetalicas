@@ -20,6 +20,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile 'com.squareup.retrofit2:retrofit:2.8.1'
     compile 'com.squareup.retrofit2:converter-gson:2.8.1'
+    compile group: 'org.scilab.forge', name: 'jlatexmath', version: '1.0.7'
 }
 
 mainClassName = "br.com.als.main.Launch"

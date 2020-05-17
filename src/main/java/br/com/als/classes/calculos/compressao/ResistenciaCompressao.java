@@ -8,36 +8,92 @@ import br.com.als.interfaces.Aco;
 public class ResistenciaCompressao {
 
     private float resistenciaCompressao;
-    private float gamaA1 = 1.10f;
+    private float flambagemLocalQ;
+    private float qAA;
+    private float qAL;
+    private float flambagemGlobalX;
+    private PerfilModel perfilCalculo;
+    private Aco aco;
+    private CoeficienteFlambagem vinculo;
+    private float comprimentoPeca;
+    private ModuloElasticidadeAco moduloElasticidadeAco;
 
-    public float getResistenciaCompressao(PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
-        calcularCompressao(perfilCalculo, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
-        return resistenciaCompressao;
+    private static final float GAMA_A1 = 1.10f;
+
+    public ResistenciaCompressao(PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
+        this.perfilCalculo = perfilCalculo;
+        this.aco = aco;
+        this.vinculo = vinculo;
+        this.comprimentoPeca = comprimentoPeca;
+        this.moduloElasticidadeAco = moduloElasticidadeAco;
+        FlambagemLocalQ f = new FlambagemLocalQ();
+        this.flambagemLocalQ = f.getQ(perfilCalculo, aco, moduloElasticidadeAco);
+        this.qAA = f.getqAA();
+        this.qAL = f.getqAL();
+        this.flambagemGlobalX = new FlambagemGlobalX().getX(perfilCalculo, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
+        calcularCompressao();
     }
 
-    private void calcularCompressao(PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
-
-        float q = new FlambagemLocalQ().getQ(perfilCalculo, aco, moduloElasticidadeAco);
-        float x = new FlambagemGlobalX().getX(perfilCalculo, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
-        float areaBruta = perfilCalculo.getAreaBruta();
-        float tensaoEscoamentoKNcm2 = aco.getTensaoEscoamento() / 10;
-
-        resistenciaCompressao = q * x * areaBruta * tensaoEscoamentoKNcm2 / gamaA1;
+    public ResistenciaCompressao(float momentoInercia, PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
+        this.perfilCalculo = perfilCalculo;
+        this.aco = aco;
+        this.vinculo = vinculo;
+        this.comprimentoPeca = comprimentoPeca;
+        this.moduloElasticidadeAco = moduloElasticidadeAco;
+        FlambagemLocalQ f = new FlambagemLocalQ();
+        this.flambagemLocalQ = f.getQ(perfilCalculo, aco, moduloElasticidadeAco);
+        this.qAA = f.getqAA();
+        this.qAL = f.getqAL();
+        this.flambagemGlobalX = new FlambagemGlobalX().getX(momentoInercia, perfilCalculo, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
+        calcularCompressao();
     }
 
-    public float getResistenciaCompressao(float momentoInercia, PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
-        calcularCompressao(momentoInercia, perfilCalculo, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
-        return resistenciaCompressao;
+    public float getFlambagemLocalQ() {
+        return this.flambagemLocalQ;
     }
 
-    private void calcularCompressao(float momentoInercia, PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
+    public float getFlambagemGlobalX() {
+        return this.flambagemGlobalX;
+    }
 
-        float q = new FlambagemLocalQ().getQ(perfilCalculo, aco, moduloElasticidadeAco);
-//        System.out.println("Qa x Qs = " + q);
-        float x = new FlambagemGlobalX().getX(momentoInercia, perfilCalculo, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
-        float areaBruta = perfilCalculo.getAreaBruta();
-        float tensaoEscoamentoKNcm2 = aco.getTensaoEscoamento() / 10;
+    public PerfilModel getPerfilCalculo() {
+        return this.perfilCalculo;
+    }
 
-        resistenciaCompressao = q * x * areaBruta * tensaoEscoamentoKNcm2 / gamaA1;
+    public Aco getAco() {
+        return this.aco;
+    }
+
+    public CoeficienteFlambagem getVinculo() {
+        return this.vinculo;
+    }
+
+    public float getComprimentoPeca() {
+        return this.comprimentoPeca;
+    }
+
+    public ModuloElasticidadeAco getModuloElasticidadeAco() {
+        return this.moduloElasticidadeAco;
+    }
+
+    public float getResistenciaCompressao() {
+        return this.resistenciaCompressao;
+    }
+
+    public float getqAA() {
+        return qAA;
+    }
+
+    public float getqAL() {
+        return qAL;
+    }
+
+    private void calcularCompressao() {
+        float q = getFlambagemLocalQ();
+        float x = getFlambagemGlobalX();
+        float areaBruta = getPerfilCalculo().getAreaBruta();
+        float tensaoEscoamentoKNcm2 = getAco().getTensaoEscoamento() / 10;
+
+        this.resistenciaCompressao = q * x * areaBruta * tensaoEscoamentoKNcm2 / GAMA_A1;
     }
 }

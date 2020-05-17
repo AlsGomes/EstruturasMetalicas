@@ -9,6 +9,9 @@ import br.com.als.interfaces.Aco;
 
 public class FlambagemLocalQ {
 
+    private float qAA;
+    private float qAL;
+
     public float getQ(PerfilModel perfilCalculo, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
         return getQs(perfilCalculo, aco, moduloElasticidadeAco) * getQa(perfilCalculo, aco, moduloElasticidadeAco);
     }
@@ -55,6 +58,7 @@ public class FlambagemLocalQ {
         }
 
 //        System.out.println("qa " + qa);
+        this.qAA = qa;
         return qa;
     }
 
@@ -166,11 +170,19 @@ public class FlambagemLocalQ {
                 }
 
                 qs = Math.min(qsAlma, qsAba);
-
                 break;
         }
 
 //        System.out.println("qs " + qs);
+        this.qAL = qs;
         return qs;
+    }
+
+    public float getqAA() {
+        return qAA;
+    }
+
+    public float getqAL() {
+        return qAL;
     }
 }

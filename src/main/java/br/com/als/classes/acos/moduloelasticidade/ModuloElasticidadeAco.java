@@ -9,12 +9,14 @@ public enum ModuloElasticidadeAco {
     private float moduloElasticidadeMPa;
     private float moduloElasticidadeKPa;
     private float moduloElasticidadeKNcm2;
+    private String denominacaoGPa;
 
     ModuloElasticidadeAco(float moduloElasticidadeGPa, float moduloElasticidadeMPa, float moduloElasticidadeKPa, float moduloElasticidadeKNcm2) {
         this.moduloElasticidadeGPa = moduloElasticidadeGPa;
         this.moduloElasticidadeMPa = moduloElasticidadeMPa;
         this.moduloElasticidadeKPa = moduloElasticidadeKPa;
         this.moduloElasticidadeKNcm2 = moduloElasticidadeKNcm2;
+        this.denominacaoGPa = moduloElasticidadeGPa + "GPa";
     }
 
     public float getModuloElasticidadeGPa() {
@@ -31,5 +33,9 @@ public enum ModuloElasticidadeAco {
 
     public float getModuloElasticidadeKNcm2() {
         return moduloElasticidadeKNcm2;
+    }
+
+    public String getDenominacaoGPa() {
+        return denominacaoGPa;
     }
 }
