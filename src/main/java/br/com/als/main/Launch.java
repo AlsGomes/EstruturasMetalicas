@@ -30,7 +30,7 @@ public class Launch extends Application {
 
         Aco aco = new MR250();
         String path = "perfis/%s.json";
-        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "L76X10.7"));
+        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "L76x10.7"));
 
         ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao(
                 perfilCalculo

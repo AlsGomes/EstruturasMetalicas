@@ -4,10 +4,10 @@ import br.com.als.classes.anexos.anexof.Grupo;
 
 public class PerfilModel {
 
-    private String nomePerfil = "L76X10.7";
+    private String nomePerfil = "L76.2x76.2x7.9";
 
     private float espessuraAlma;
-    private float espessuraAba = 9.52f;
+    private float espessuraAba = 7.94f;
     private float espessuraMesa;
 
     private float alturaAlma;
@@ -24,22 +24,22 @@ public class PerfilModel {
     private float esbeltezMesa;
 //    private float esbeltezMesa = (larguraMesa / 2) / espessuraMesa;
 
-    private float moduloResistenciaWx = 13.60f;
-    private float moduloResistenciaWy = 13.60f;
+    private float moduloResistenciaWx = 11.60f;
+    private float moduloResistenciaWy = 11.60f;
 
     //    private float areaBruta = (2 * ((espessuraMesa / 10) * (larguraMesa / 10))) + ((larguraAlma / 10) * (espessuraMesa / 10));
-    private float areaBruta = 13.61f;
-    private float pesoPorMetro = 10.7f;
-    private float inerciaX = 75f;
-    private float inerciaY = 75f;
-    private float raioGiracaoX = 2.31f;
-    private float raioGiracaoY = 2.31f;
-    private float raioGiracaoMin = 1.47f;
+    private float areaBruta = 11.48f;
+    private float pesoPorMetro = 9.07f;
+    private float inerciaX = 62f;
+    private float inerciaY = 62f;
+    private float raioGiracaoX = 2.34f;
+    private float raioGiracaoY = 2.34f;
+    private float raioGiracaoMin = 1.5f;
     //    private float inerciaZ;
     private float inerciaZ = (float) Math.pow(raioGiracaoMin, 2) * areaBruta;
 
     private Grupo grupoAlma;
-    private Grupo grupoAba = Grupo.GRUPO4;
+    private Grupo grupoAba = Grupo.GRUPO3;
     private Grupo grupoMesa;
     private Perfil perfil = Perfil.L;
 
