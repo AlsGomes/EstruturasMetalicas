@@ -49,7 +49,7 @@ public class ReportCompressao implements Report {
         qs = String.format("%.2f", this.r.getqAL());
         ag = String.format("%.2fcm^2", this.r.getPerfilCalculo().getAreaBruta());
         fy = String.format("%.2f kN/cm^2", this.r.getAco().getTensaoEscoamento() / 10);
-        comprimentoPeca = String.format("%.2f", this.r.getComprimentoPeca());
+        comprimentoPeca = String.format("%.2f cm", this.r.getComprimentoPeca());
         result = String.format("%.2f kN", this.r.getResistenciaCompressao());
         nomePerfil = r.getPerfilCalculo().getNomePerfil();
         nomeAco = r.getAco().getDenominacao();
@@ -81,16 +81,15 @@ public class ReportCompressao implements Report {
         qaXqs();
         flambGlob();
         ncRd(x, q, ag, fy, gammaA1, result);
-//        System.out.println(laTeX);
-
+        System.out.println(laTeX);
     }
 
     private void flambGlob() {
         laTeX += "\\chi(\\lambda_0)\\rightarrow\\lambda_0(N_e)";
         breakLine();
-        laTeX += "N_e=\\frac{\\pi^2 EI}{KX}";
+        laTeX += "N_e=\\frac{\\pi^2 EI}{(KL)^2}";
         breakLine();
-        laTeX += String.format("N_e=\\frac{\\pi^2\\cdot %s\\cdot %s}{%s\\cdot %s}=%s", moduloElasticidade, inerciaUtilizada, k, comprimentoPeca, cargaCriticaEuler);
+        laTeX += String.format("N_e=\\frac{\\pi^2\\cdot %s\\cdot %s}{(%s\\cdot %s)^2}=%s", moduloElasticidade, inerciaUtilizada, k, comprimentoPeca, cargaCriticaEuler);
         breakLine();
         laTeX += "\\lambda_0=\\sqrt{\\frac{Q A_g f_y}{N_e}}=";
         laTeX += String.format("\\sqrt{\\frac{%s\\cdot %s\\cdot %s}{%s}}=%s", q, ag, fy, cargaCriticaEuler, lambda0);
@@ -108,7 +107,7 @@ public class ReportCompressao implements Report {
     }
 
     private String ncRd() {
-        return laTeX += "N_{c,rd}=\\frac{\\chi\\cdot Q\\cdot A_g\\cdot f_y}{\\gamma_{a1}}";
+        return laTeX += "N_{c,rd}=\\frac{\\chi Q A_g f_y}{\\gamma_{a1}}";
     }
 
     private String ncRd(String x, String q, String ag, String fy, String gammaA1, String result) {

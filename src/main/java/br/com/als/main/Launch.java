@@ -33,7 +33,8 @@ public class Launch extends Application {
         PerfilModel perfilCalculo = JsonReader.read(String.format(path, "L76x10.7"));
 
         ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao(
-                perfilCalculo
+                314.72f
+                ,perfilCalculo
                 , aco
                 , CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO
                 , 250f
