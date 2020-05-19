@@ -11,6 +11,9 @@ public class FlambagemLocalQ {
 
     private float qAA;
     private float qAL;
+    private float larguraEfetiva;
+    private float areaEfetiva;
+    private float kcGrupo5;
 
     public float getQ(PerfilModel perfilCalculo, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
         return getQs(perfilCalculo, aco, moduloElasticidadeAco) * getQa(perfilCalculo, aco, moduloElasticidadeAco);
@@ -44,15 +47,15 @@ public class FlambagemLocalQ {
                     float areaBruta = perfilCalculo.getAreaBruta();
                     float coeficienteCa = 0.34f;
                     float tensao = tensaoEscoamentoKNcm2;
-                    float larguraEfetiva = (float) (1.92 * (perfilCalculo.getEspessuraAlma() / 10) * Math.sqrt(moduloElasticidadeKNcm2 / tensao)
+                    this.larguraEfetiva = (float) (1.92 * (perfilCalculo.getEspessuraAlma() / 10) * Math.sqrt(moduloElasticidadeKNcm2 / tensao)
                             * (1 - ((coeficienteCa / ((perfilCalculo.getLarguraAlma() / 10) / (perfilCalculo.getEspessuraAlma() / 10))) *
                             Math.sqrt(moduloElasticidadeKNcm2 / tensao))));
-                    float areaEfetiva = areaBruta - (((perfilCalculo.getLarguraAlma() / 10) - larguraEfetiva) * (perfilCalculo.getEspessuraAlma() / 10));
+                    this.areaEfetiva = areaBruta - (((perfilCalculo.getLarguraAlma() / 10) - this.larguraEfetiva) * (perfilCalculo.getEspessuraAlma() / 10));
 
 //                    System.out.println("LARGURA EFETIVA " + larguraEfetiva);
 //                    System.out.println("AREA EFETIVA " + areaEfetiva);
 
-                    qa = areaEfetiva / areaBruta;
+                    qa = this.areaEfetiva / areaBruta;
                 }
                 break;
         }
@@ -97,15 +100,15 @@ public class FlambagemLocalQ {
                 grupo = perfilCalculo.getGrupoMesa();
                 esbeltez = perfilCalculo.getEsbeltezMesa();
                 if (grupo.equals(Grupo.GRUPO5)) {
-                    float kc = CoeficienteKcGrupo5.getKc(perfilCalculo);
+                    this.kcGrupo5 = CoeficienteKcGrupo5.getKc(perfilCalculo);
 
                     if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
                         qs = 1;
                     } else {
                         if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
-                            qs = (float) (1.415 - (0.65 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / (kc * moduloElasticidadeKNcm2))));
+                            qs = (float) (1.415 - (0.65 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / (this.kcGrupo5 * moduloElasticidadeKNcm2))));
                         } else {
-                            qs = (float) ((0.90 * moduloElasticidadeKNcm2 * kc) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
+                            qs = (float) ((0.90 * moduloElasticidadeKNcm2 * this.kcGrupo5) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
                         }
                     }
                 } else {
@@ -156,15 +159,15 @@ public class FlambagemLocalQ {
                         }
                     }
                 } else if (grupoAba.equals(Grupo.GRUPO5)) {
-                    float kc = CoeficienteKcGrupo5.getKc(perfilCalculo);
+                    this.kcGrupo5 = CoeficienteKcGrupo5.getKc(perfilCalculo);
 
                     if (esbeltezAba < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupoAba, moduloElasticidadeAco)) {
                         qsAba = 1;
                     } else {
                         if (esbeltezAba < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupoAba, moduloElasticidadeAco)) {
-                            qsAba = (float) (1.415 - (0.65 * esbeltezAba * Math.sqrt(tensaoEscoamentoKNcm2 / (kc * moduloElasticidadeKNcm2))));
+                            qsAba = (float) (1.415 - (0.65 * esbeltezAba * Math.sqrt(tensaoEscoamentoKNcm2 / (this.kcGrupo5 * moduloElasticidadeKNcm2))));
                         } else {
-                            qsAba = (float) ((0.90 * moduloElasticidadeKNcm2 * kc) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltezAba, 2)));
+                            qsAba = (float) ((0.90 * moduloElasticidadeKNcm2 * this.kcGrupo5) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltezAba, 2)));
                         }
                     }
                 }
@@ -184,5 +187,17 @@ public class FlambagemLocalQ {
 
     public float getqAL() {
         return qAL;
+    }
+
+    public float getLarguraEfetiva() {
+        return larguraEfetiva;
+    }
+
+    public float getAreaEfetiva() {
+        return areaEfetiva;
+    }
+
+    public float getKcGrupo5() {
+        return kcGrupo5;
     }
 }

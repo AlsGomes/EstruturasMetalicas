@@ -8,6 +8,12 @@ import br.com.als.interfaces.Aco;
 
 public class LimiteEsbeltez {
 
+    private static float kc;
+
+    public float getKc() {
+        return kc;
+    }
+
     public static float getEsbeltezLim1(PerfilModel perfilCalculo, Aco aco, Grupo grupo, ModuloElasticidadeAco moduloElasticidadeAco) {
 
         float esbeltez = 0;
@@ -28,7 +34,7 @@ public class LimiteEsbeltez {
                 esbeltez = (float) (0.56 * Math.sqrt(moduloElasticidadeKNcm2 / tensaoEscoamentoKNcm2));
                 break;
             case GRUPO5:
-                float kc = CoeficienteKcGrupo5.getKc(perfilCalculo);
+                kc = CoeficienteKcGrupo5.getKc(perfilCalculo);
                 if (kc < 0.35 || kc > 0.76) {
                     System.out.println(String.format("Verificar coeficiente kc do Grupo5. Valor %s", kc));
                 }
@@ -65,7 +71,7 @@ public class LimiteEsbeltez {
                 esbeltez = (float) (1.03 * Math.sqrt(moduloElasticidadeKNcm2 / tensaoEscoamentoKNcm2));
                 break;
             case GRUPO5:
-                float kc = CoeficienteKcGrupo5.getKc(perfilCalculo);
+                kc = CoeficienteKcGrupo5.getKc(perfilCalculo);
                 if (kc < 0.35 || kc > 0.76) {
                     System.out.println(String.format("Verificar coeficiente kc do Grupo5. Valor %s", kc));
                 }

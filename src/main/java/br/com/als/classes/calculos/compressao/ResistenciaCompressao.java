@@ -11,6 +11,8 @@ public class ResistenciaCompressao {
     private float flambagemLocalQ;
     private float qAA;
     private float qAL;
+    private float larguraEfetiva;
+    private float areaEfetiva;
     private float flambagemGlobalX;
     private float inerciaUtilizada;
     private PerfilModel perfilCalculo;
@@ -20,6 +22,7 @@ public class ResistenciaCompressao {
     private ModuloElasticidadeAco moduloElasticidadeAco;
     private float cargaCriticaEuler;
     private float lambda0;
+    private float kcGrupo5;
 
     private static final float GAMA_A1 = 1.10f;
 
@@ -33,6 +36,9 @@ public class ResistenciaCompressao {
         this.flambagemLocalQ = fQ.getQ(perfilCalculo, aco, moduloElasticidadeAco);
         this.qAA = fQ.getqAA();
         this.qAL = fQ.getqAL();
+        this.areaEfetiva = fQ.getAreaEfetiva();
+        this.larguraEfetiva = fQ.getLarguraEfetiva();
+        this.kcGrupo5 = fQ.getKcGrupo5();
         FlambagemGlobalX fX = new FlambagemGlobalX();
         this.flambagemGlobalX = fX.getX(perfilCalculo, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
         this.inerciaUtilizada = fX.getInerciaUtilizada();
@@ -47,16 +53,31 @@ public class ResistenciaCompressao {
         this.vinculo = vinculo;
         this.comprimentoPeca = comprimentoPeca;
         this.moduloElasticidadeAco = moduloElasticidadeAco;
-        FlambagemLocalQ f = new FlambagemLocalQ();
-        this.flambagemLocalQ = f.getQ(perfilCalculo, aco, moduloElasticidadeAco);
-        this.qAA = f.getqAA();
-        this.qAL = f.getqAL();
+        FlambagemLocalQ fQ = new FlambagemLocalQ();
+        this.flambagemLocalQ = fQ.getQ(perfilCalculo, aco, moduloElasticidadeAco);
+        this.qAA = fQ.getqAA();
+        this.qAL = fQ.getqAL();
+        this.areaEfetiva = fQ.getAreaEfetiva();
+        this.larguraEfetiva = fQ.getLarguraEfetiva();
+        this.kcGrupo5 = fQ.getKcGrupo5();
         FlambagemGlobalX fX = new FlambagemGlobalX();
         this.flambagemGlobalX = fX.getX(momentoInercia, perfilCalculo, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
         this.inerciaUtilizada = momentoInercia;
         this.cargaCriticaEuler = fX.getCargaCriticaEuler();
         this.lambda0 = fX.getLambda0();
         calcularCompressao();
+    }
+
+    public float getKcGrupo5() {
+        return kcGrupo5;
+    }
+
+    public float getLarguraEfetiva() {
+        return larguraEfetiva;
+    }
+
+    public float getAreaEfetiva() {
+        return areaEfetiva;
     }
 
     public float getLambda0() {

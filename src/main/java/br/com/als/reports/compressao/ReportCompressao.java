@@ -3,6 +3,7 @@ package br.com.als.reports.compressao;
 import br.com.als.classes.anexos.anexof.Grupo;
 import br.com.als.classes.calculos.compressao.LimiteEsbeltez;
 import br.com.als.classes.calculos.compressao.ResistenciaCompressao;
+import br.com.als.classes.perfis.Perfil;
 
 import java.awt.*;
 import java.io.File;
@@ -14,6 +15,7 @@ public class ReportCompressao implements Report {
 
     private ResistenciaCompressao r;
     private String bMesa;
+    private String bMesaMetade;
     private String tMesa;
     private String esbeltezMesa;
     private String bAba;
@@ -38,6 +40,10 @@ public class ReportCompressao implements Report {
     private String moduloElasticidade;
     private String cargaCriticaEuler;
     private String lambda0;
+    private String larguraEfetiva;
+    private String areaEfetiva;
+    private String areaBruta;
+    private String kcGrupo5;
 
     private String laTeX = "";
 
@@ -58,6 +64,10 @@ public class ReportCompressao implements Report {
         inerciaUtilizada = String.format("%.2f cm^4", this.r.getInerciaUtilizada());
         cargaCriticaEuler = String.format("%.2f kN", this.r.getCargaCriticaEuler());
         lambda0 = String.format("%.2f", this.r.getLambda0());
+        areaEfetiva = String.format("%.2f cm^2", this.r.getAreaEfetiva());
+        larguraEfetiva = String.format("%.2f cm", this.r.getLarguraEfetiva());
+        areaBruta = String.format("%.2f cm^2", this.r.getPerfilCalculo().getAreaBruta());
+        kcGrupo5 = String.format("%.2f", this.r.getKcGrupo5());
         setEsbeltez();
     }
 
@@ -119,18 +129,23 @@ public class ReportCompressao implements Report {
     }
 
     private String qaXqs() {
-        laTeX += "Q=Q_a\\cdot Q_s";
+        laTeX += "Q=Q_a Q_s";
         breakLine();
         switch (this.r.getPerfilCalculo().getPerfil()) {
             case T:
-                laTeX += "Q_a=" + qa;
-                breakLine();
                 esbeltez();
                 breakLine();
-                esbeltez(bMesa, tMesa, esbeltezMesa);
+                esbeltez(bMesaMetade, tMesa, esbeltezMesa);
                 breakLine();
-                esbeltezLim(moduloElasticidade, fy);
+                esbeltezLimMesa(moduloElasticidade, fy);
+
+                esbeltez();
                 breakLine();
+                esbeltez(bAlma, tAlma, esbeltezAlma);
+                breakLine();
+                esbeltezLimAlma(moduloElasticidade, fy);
+
+                laTeX += String.format("Q=%s\\cdot %s=%s", qa, qs, q);
                 break;
             case L:
                 laTeX += "Q_a=" + qa;
@@ -139,96 +154,53 @@ public class ReportCompressao implements Report {
                 breakLine();
                 esbeltez(bAba, tAba, esbeltezAba);
                 breakLine();
-                esbeltezLim(moduloElasticidade, fy);
+                esbeltezLimAba(moduloElasticidade, fy);
                 breakLine();
                 break;
             case I:
             case H:
             case W:
+                esbeltez();
+                breakLine();
+                esbeltez(bAlma, tAlma, esbeltezAlma);
+                breakLine();
+                esbeltezLimAlma(moduloElasticidade, fy);
+
+                esbeltez();
+                breakLine();
+                esbeltez(bMesaMetade, tMesa, esbeltezMesa);
+                breakLine();
+                esbeltezLimMesa(moduloElasticidade, fy);
+
+                laTeX += String.format("Q=%s\\cdot %s=%s", qa, qs, q);
+                break;
             case U:
+                esbeltez();
+                breakLine();
+                esbeltez(bAlma, tAlma, esbeltezAlma);
+                breakLine();
+                esbeltezLimAlma(moduloElasticidade, fy);
+
+                esbeltez();
+                breakLine();
+                esbeltez(bMesa, tMesa, esbeltezMesa);
+                breakLine();
+                esbeltezLimMesa(moduloElasticidade, fy);
+
+                laTeX += String.format("Q=%s\\cdot %s=%s", qa, qs, q);
                 break;
         }
+        breakLine();
 
         return laTeX;
     }
 
-    private void esbeltezLim(String e, String fy) {
+    private void esbeltezLimAba(String e, String fy) {
         String resultStringLim1;
         String resultStringLim2;
         float resultValorLim1;
         float resultValorLim2;
         switch (this.r.getPerfilCalculo().getPerfil()) {
-            case T:
-                switch (this.r.getPerfilCalculo().getGrupoAba()) {
-                    case GRUPO4:
-                        resultValorLim1 = LimiteEsbeltez.getEsbeltezLim1(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO4, this.r.getModuloElasticidadeAco());
-                        resultValorLim2 = LimiteEsbeltez.getEsbeltezLim2(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO4, this.r.getModuloElasticidadeAco());
-                        resultStringLim1 = String.format("%.2f", resultValorLim1);
-                        resultStringLim2 = String.format("%.2f", resultValorLim2);
-                        laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}=";
-                        laTeX += "0,56\\cdot\\sqrt{\\frac{E}{f_y}}=";
-                        laTeX += String.format("0,56\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim1);
-                        breakLine();
-                        if (this.r.getPerfilCalculo().getEsbeltezAba() < resultValorLim1) {
-                            laTeX += String.format("\\lambda <\\left(\\frac{b}{t}\\right)_{lim1}\\therefore Q_s=%s", qs);
-                            breakLine();
-                            laTeX += String.format("Q=%s\\cdot %s=%s", qa, qs, String.format("%.2f", this.r.getFlambagemLocalQ()));
-                        } else if (this.r.getPerfilCalculo().getEsbeltezAba() < resultValorLim2) {
-                            laTeX += "\\left(\\frac{b}{t}\\right)_{lim2}=";
-                            laTeX += "1,03\\cdot\\sqrt{\\frac{E}{f_y}}=";
-                            laTeX += String.format("1,03\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim2);
-                            breakLine();
-                            laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}<\\lambda <\\left(\\frac{b}{t}\\right)_{lim2}";
-                            breakLine();
-                            laTeX += "Q_s=1,415-0,74\\frac{b}{t}\\sqrt{\\frac{f_y}{E}}";
-                            breakLine();
-                            laTeX += String.format("Q_s=1,415-0,74\\cdot\\frac{%s}{%s}\\cdot\\sqrt{\\frac{%s}{%s}}=%s", bAba, tAba, fy, e, qs);
-                            breakLine();
-                            laTeX += String.format("Q=%s\\cdot %s=%s", qa, qs, String.format("%.2f", this.r.getFlambagemLocalQ()));
-                        } else {
-                            laTeX += "\\left(\\frac{b}{t}\\right)_{lim2}=";
-                            laTeX += "1,03\\cdot\\sqrt{\\frac{E}{f_y}}=";
-                            laTeX += String.format("1,03\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim2);
-                            breakLine();
-                            laTeX += "\\lambda > \\left(\\frac{b}{t}\\right)_{lim2}";
-                            breakLine();
-                            laTeX += "Q_s=\\frac{0,69E}{f_y\\left(\\frac{b}{t}\\right)^2}";
-                            breakLine();
-                            laTeX += String.format("Q_s=\\frac{0,69%s}{%s\\cdot\\left(\\frac{%s}{%s}\\right)^2}=%s", e, fy, bAba, tAba, qs);
-                        }
-                        break;
-                    case GRUPO5:
-                        resultValorLim1 = LimiteEsbeltez.getEsbeltezLim1(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO5, this.r.getModuloElasticidadeAco());
-                        resultStringLim1 = String.format("%.2f", resultValorLim1);
-                        laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}=";
-                        laTeX += "0,64\\cdot\\sqrt{\\frac{E}{f_y / k_c}}=";
-                        laTeX += String.format("0,56\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim1);
-                        breakLine();
-                        if (this.r.getPerfilCalculo().getEsbeltezAba() < resultValorLim1) {
-                            laTeX += String.format("\\lambda <\\left(\\frac{b}{t}\\right)_{lim1}\\therefore Q_s=%s", qs);
-                            breakLine();
-                            laTeX += String.format("Q=%s\\cdot %s=%s", qa, qs, String.format("%.2f", this.r.getFlambagemLocalQ()));
-                        }
-
-
-                        break;
-                    case GRUPO6:
-                        resultValorLim1 = LimiteEsbeltez.getEsbeltezLim1(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO6, this.r.getModuloElasticidadeAco());
-                        resultStringLim1 = String.format("%.2f", resultValorLim1);
-                        laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}=";
-                        laTeX += "0,75\\cdot\\sqrt{\\frac{E}{f_y}}=";
-                        laTeX += String.format("0,56\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim1);
-                        breakLine();
-                        if (this.r.getPerfilCalculo().getEsbeltezAba() < resultValorLim1) {
-                            laTeX += String.format("\\lambda <\\left(\\frac{b}{t}\\right)_{lim1}\\therefore Q_s=%s", qs);
-                            breakLine();
-                            laTeX += String.format("Q=%s\\cdot %s=%s", qa, qs, String.format("%.2f", this.r.getFlambagemLocalQ()));
-                        }
-
-                        break;
-                }
-                break;
-
             case L:
                 switch (this.r.getPerfilCalculo().getGrupoAba()) {
                     case GRUPO4:
@@ -308,37 +280,205 @@ public class ReportCompressao implements Report {
                         break;
                 }
                 break;
+        }
+    }
+
+    private void esbeltezLimMesa(String e, String fy) {
+        String resultStringLim1;
+        String resultStringLim2;
+        float resultValorLim1;
+        float resultValorLim2;
+        String bUtilizado = (this.r.getPerfilCalculo().getPerfil().equals(Perfil.U) ? bMesa : bMesaMetade);
+        switch (this.r.getPerfilCalculo().getGrupoMesa()) {
+            case GRUPO4:
+                resultValorLim1 = LimiteEsbeltez.getEsbeltezLim1(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO4, this.r.getModuloElasticidadeAco());
+                resultValorLim2 = LimiteEsbeltez.getEsbeltezLim2(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO4, this.r.getModuloElasticidadeAco());
+                resultStringLim1 = String.format("%.2f", resultValorLim1);
+                resultStringLim2 = String.format("%.2f", resultValorLim2);
+                laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}=";
+                laTeX += "0,56\\cdot\\sqrt{\\frac{E}{f_y}}=";
+                laTeX += String.format("0,56\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim1);
+                breakLine();
+                if (this.r.getPerfilCalculo().getEsbeltezMesa() < resultValorLim1) {
+                    laTeX += String.format("\\lambda <\\left(\\frac{b}{t}\\right)_{lim1}\\therefore Q_s=%s", qs);
+                    breakLine();
+                } else if (this.r.getPerfilCalculo().getEsbeltezMesa() < resultValorLim2) {
+                    laTeX += "\\left(\\frac{b}{t}\\right)_{lim2}=";
+                    laTeX += "1,03\\cdot\\sqrt{\\frac{E}{f_y}}=";
+                    laTeX += String.format("1,03\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim2);
+                    breakLine();
+                    laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}<\\lambda <\\left(\\frac{b}{t}\\right)_{lim2}";
+                    breakLine();
+                    laTeX += "Q_s=1,415-0,74\\frac{b}{t}\\sqrt{\\frac{f_y}{E}}";
+                    breakLine();
+                    laTeX += String.format("Q_s=1,415-0,74\\cdot\\frac{%s}{%s}\\cdot\\sqrt{\\frac{%s}{%s}}=%s", bUtilizado, tMesa, fy, e, qs);
+                    breakLine();
+                } else {
+                    laTeX += "\\left(\\frac{b}{t}\\right)_{lim2}=";
+                    laTeX += "1,03\\cdot\\sqrt{\\frac{E}{f_y}}=";
+                    laTeX += String.format("1,03\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim2);
+                    breakLine();
+                    laTeX += "\\lambda > \\left(\\frac{b}{t}\\right)_{lim2}";
+                    breakLine();
+                    laTeX += "Q_s=\\frac{0,69E}{f_y\\left(\\frac{b}{t}\\right)^2}";
+                    breakLine();
+                    laTeX += String.format("Q_s=\\frac{0,69%s}{%s\\cdot\\left(\\frac{%s}{%s}\\right)^2}=%s", e, fy, bMesa, tMesa, qs);
+                }
+                break;
+
+            case GRUPO5:
+                resultValorLim1 = LimiteEsbeltez.getEsbeltezLim1(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO5, this.r.getModuloElasticidadeAco());
+                resultValorLim2 = LimiteEsbeltez.getEsbeltezLim2(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO5, this.r.getModuloElasticidadeAco());
+                resultStringLim1 = String.format("%.2f", resultValorLim1);
+                resultStringLim2 = String.format("%.2f", resultValorLim2);
+                laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}=";
+                laTeX += "0,64\\cdot\\sqrt{\\frac{E}{f_y/k_c}}";
+                breakLine();
+                laTeX += "k_c=\\frac{4}{\\sqrt{h/t_w}}";
+                breakLine();
+                laTeX += String.format("k_c=\\frac{4}{\\sqrt{%s/%s}}=%s", bAlma, tAlma, kcGrupo5);
+                breakLine();
+                laTeX += String.format("0,64\\cdot\\sqrt{\\frac{%s}{%s/%s}}=%s", e, fy, kcGrupo5, resultStringLim1);
+                breakLine();
+                if (this.r.getPerfilCalculo().getEsbeltezMesa() < resultValorLim1) {
+                    laTeX += String.format("\\lambda <\\left(\\frac{b}{t}\\right)_{lim1}\\therefore Q_s=%s", qs);
+                    breakLine();
+                } else if (this.r.getPerfilCalculo().getEsbeltezMesa() < resultValorLim2) {
+                    laTeX += "\\left(\\frac{b}{t}\\right)_{lim2}=";
+                    laTeX += "1,17\\sqrt{\\frac{E}{f_y/k_c}}=";
+                    laTeX += String.format("1,17\\cdot\\sqrt{\\frac{%s}{%s/%s}}=%s", e, fy, kcGrupo5, resultStringLim2);
+                    breakLine();
+                    laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}<\\lambda <\\left(\\frac{b}{t}\\right)_{lim2}";
+                    breakLine();
+                    laTeX += "Q_s=1,415-0,65\\frac{b}{t}\\sqrt{\\frac{f_y}{k_c\\cdot E}}";
+                    breakLine();
+                    laTeX += String.format("Q_s=1,415-0,65\\cdot\\frac{%s}{%s}\\cdot\\sqrt{\\frac{%s}{%s\\cdot %s}}=%s", bUtilizado, tMesa, fy, kcGrupo5, e, qs);
+                    breakLine();
+                } else {
+                    laTeX += "\\left(\\frac{b}{t}\\right)_{lim2}=";
+                    laTeX += "1,17\\cdot\\sqrt{\\frac{E}{f_y/k_c}}=";
+                    laTeX += String.format("1,17\\cdot\\sqrt{\\frac{%s}{%s/%s}}=%s", e, fy, kcGrupo5, resultStringLim2);
+                    breakLine();
+                    laTeX += "\\lambda > \\left(\\frac{b}{t}\\right)_{lim2}";
+                    breakLine();
+                    laTeX += "Q_s=\\frac{0,90E k_c}{f_y\\left(\\frac{b}{t}\\right)^2}";
+                    breakLine();
+                    laTeX += String.format("Q_s=\\frac{0,90\\cdot %s\\cdot %s}{%s\\cdot\\left(\\frac{%s}{%s}\\right)^2}=%s", e, kcGrupo5, fy, bMesa, tMesa, qs);
+                    breakLine();
+                }
+                break;
+        }
+    }
+
+    private void esbeltezLimAlma(String e, String fy) {
+        String resultStringLim1;
+        String resultStringLim2;
+        float resultValorLim1;
+        float resultValorLim2;
+        switch (this.r.getPerfilCalculo().getPerfil()) {
+            case T:
+                switch (this.r.getPerfilCalculo().getGrupoAlma()) {
+                    case GRUPO6:
+                        resultValorLim1 = LimiteEsbeltez.getEsbeltezLim1(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO6, this.r.getModuloElasticidadeAco());
+                        resultValorLim2 = LimiteEsbeltez.getEsbeltezLim2(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO6, this.r.getModuloElasticidadeAco());
+                        resultStringLim1 = String.format("%.2f", resultValorLim1);
+                        resultStringLim2 = String.format("%.2f", resultValorLim2);
+                        laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}=";
+                        laTeX += "0,75\\cdot\\sqrt{\\frac{E}{f_y}}=";
+                        laTeX += String.format("0,75\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim1);
+                        breakLine();
+                        if (this.r.getPerfilCalculo().getEsbeltezAlma() < resultValorLim1) {
+                            laTeX += String.format("\\lambda <\\left(\\frac{b}{t}\\right)_{lim1}\\therefore Q_s=%s", qs);
+                            breakLine();
+                        } else if (this.r.getPerfilCalculo().getEsbeltezAlma() < resultValorLim2) {
+                            laTeX += "\\left(\\frac{b}{t}\\right)_{lim2}=";
+                            laTeX += "1,03\\sqrt{\\frac{E}{f_y}}=";
+                            laTeX += String.format("1,03\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim2);
+                            breakLine();
+                            laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}<\\lambda <\\left(\\frac{b}{t}\\right)_{lim2}";
+                            breakLine();
+                            laTeX += "Q_s=1,908-1,22\\frac{b}{t}\\sqrt{\\frac{f_y}{E}}";
+                            breakLine();
+                            laTeX += String.format("Q_s=1,908-1,22\\cdot\\frac{%s}{%s}\\cdot\\sqrt{\\frac{%s}{%s}}=%s", bAlma, tAlma, fy, e, qs);
+                            breakLine();
+                        } else {
+                            laTeX += "\\left(\\frac{b}{t}\\right)_{lim2}=";
+                            laTeX += "1,03\\cdot\\sqrt{\\frac{E}{f_y}}=";
+                            laTeX += String.format("1,03\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim2);
+                            breakLine();
+                            laTeX += "\\lambda > \\left(\\frac{b}{t}\\right)_{lim2}";
+                            breakLine();
+                            laTeX += "Q_s=\\frac{0,69E}{f_y\\left(\\frac{b}{t}\\right)^2}";
+                            breakLine();
+                            laTeX += String.format("Q_s=\\frac{0,69%s}{%s\\cdot\\left(\\frac{%s}{%s}\\right)^2}=%s", e, fy, bAlma, tAlma, qs);
+                            breakLine();
+                        }
+                        break;
+                }
+                break;
 
             case W:
             case I:
             case H:
             case U:
-                switch (this.r.getPerfilCalculo().getGrupoMesa()) {
-                    case GRUPO4:
-                        resultValorLim1 = LimiteEsbeltez.getEsbeltezLim1(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO4, this.r.getModuloElasticidadeAco());
+                switch (this.r.getPerfilCalculo().getGrupoAlma()) {
+                    case GRUPO1:
+                        resultValorLim1 = LimiteEsbeltez.getEsbeltezLim1(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO1, this.r.getModuloElasticidadeAco());
                         resultStringLim1 = String.format("%.2f", resultValorLim1);
                         laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}=";
-                        laTeX += "0,56\\cdot\\sqrt{\\frac{E}{f_y}}=";
-                        laTeX += String.format("0,56\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim1);
+                        laTeX += "1,40\\sqrt{\\frac{E}{f_y}}=";
+                        laTeX += String.format("1,40\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim1);
                         breakLine();
-                        if (this.r.getPerfilCalculo().getEsbeltezAba() < resultValorLim1) {
-                            laTeX += String.format("\\lambda <\\left(\\frac{b}{t}\\right)_{lim1}\\therefore Q_s=%s", qs);
+                        if (this.r.getPerfilCalculo().getEsbeltezAlma() < resultValorLim1) {
+                            laTeX += String.format("\\lambda <\\left(\\frac{b}{t}\\right)_{lim1}\\therefore Q_a=%s", qa);
                             breakLine();
-                            laTeX += String.format("Q=%s\\cdot %s=%s", qa, qs, String.format("%.2f", this.r.getFlambagemLocalQ()));
+                        } else {
+                            laTeX += "Q_a=\\frac{A_{ef}}{A_g}";
+                            breakLine();
+                            laTeX += "b_{ef}=1,92t\\sqrt{\\frac{E}{\\sigma}}\\left[1-\\frac{c_a}{b/t}\\sqrt{\\frac{E}{\\sigma}}\\right]\\leq b";
+                            breakLine();
+                            laTeX += String.format("\\sigma=f_y=%s", fy);
+                            breakLine();
+                            laTeX += "c_a=0,34";
+                            breakLine();
+                            laTeX += String.format("b_{ef}=1,92\\cdot %s\\sqrt{\\frac{%s}{%s}}\\left[1-\\frac{%s}{%s/%s}\\sqrt{\\frac{%s}{%s}}\\right]\\leq %s=%s", tAlma, e, fy, "0,34", bAlma, tAlma, e, fy, bAlma, larguraEfetiva);
+                            breakLine();
+                            laTeX += "A_{ef}=A_g-(b-b_{ef})t";
+                            breakLine();
+                            laTeX += String.format("A_{ef}=%s-(%s-%s)%s=%s", areaBruta, bAlma, larguraEfetiva, tAlma, areaEfetiva);
+                            breakLine();
+                            laTeX += String.format("Q_a=\\frac{%s}{%s}=%s", areaEfetiva, areaBruta, qa);
+                            breakLine();
                         }
 
                         break;
-                    case GRUPO5:
-                        resultValorLim1 = LimiteEsbeltez.getEsbeltezLim1(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO5, this.r.getModuloElasticidadeAco());
+                    case GRUPO2:
+                        resultValorLim1 = LimiteEsbeltez.getEsbeltezLim1(this.r.getPerfilCalculo(), this.r.getAco(), Grupo.GRUPO2, this.r.getModuloElasticidadeAco());
                         resultStringLim1 = String.format("%.2f", resultValorLim1);
                         laTeX += "\\left(\\frac{b}{t}\\right)_{lim1}=";
-                        laTeX += "0,64\\cdot\\sqrt{\\frac{E}{f_y / k_c}}=";
-                        laTeX += String.format("0,56\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim1);
+                        laTeX += "1,49\\sqrt{\\frac{E}{f_y}}=";
+                        laTeX += String.format("1,49\\cdot\\sqrt{\\frac{%s}{%s}}=%s", e, fy, resultStringLim1);
                         breakLine();
-                        if (this.r.getPerfilCalculo().getEsbeltezAba() < resultValorLim1) {
-                            laTeX += String.format("\\lambda <\\left(\\frac{b}{t}\\right)_{lim1}\\therefore Q_s=%s", qs);
+                        if (this.r.getPerfilCalculo().getEsbeltezAlma() < resultValorLim1) {
+                            laTeX += String.format("\\lambda <\\left(\\frac{b}{t}\\right)_{lim1}\\therefore Q_a=%s", qa);
                             breakLine();
-                            laTeX += String.format("Q=%s\\cdot %s=%s", qa, qs, String.format("%.2f", this.r.getFlambagemLocalQ()));
+                        } else {
+                            laTeX += "Q_a=\\frac{A_{ef}}{A_g}";
+                            breakLine();
+                            laTeX += "b_{ef}=1,92t\\sqrt{\\frac{E}{\\sigma}}\\left[1-\\frac{c_a}{b/t}\\sqrt{\\frac{E}{\\sigma}}\\right]\\leq b";
+                            breakLine();
+                            laTeX += String.format("\\sigma=f_y=%s", fy);
+                            breakLine();
+                            laTeX += "c_a=0,34";
+                            breakLine();
+                            laTeX += String.format("b_{ef}=1,92\\cdot %s\\sqrt{\\frac{%s}{%s}}\\left[1-\\frac{%s}{%s/%s}\\sqrt{\\frac{%s}{%s}}\\right]\\leq %s=%s", tAlma, e, fy, "0,34", bAlma, tAlma, e, fy, bAlma, larguraEfetiva);
+                            breakLine();
+                            laTeX += "A_{ef}=A_g-(b-b_{ef})t";
+                            breakLine();
+                            laTeX += String.format("A_{ef}=%s-(%s-%s)%s=%s", areaBruta, bAlma, larguraEfetiva, tAlma, areaEfetiva);
+                            breakLine();
+                            laTeX += String.format("Q_a=\\frac{%s}{%s}=%s", areaEfetiva, areaBruta, qa);
+                            breakLine();
                         }
 
                         break;
@@ -359,19 +499,21 @@ public class ReportCompressao implements Report {
         switch (this.r.getPerfilCalculo().getPerfil()) {
             case L:
             case T:
-                bAba = String.format("%.2fmm", this.r.getPerfilCalculo().getLarguraAba());
-                tAba = String.format("%.2fmm", this.r.getPerfilCalculo().getEspessuraAba());
+                bAba = String.format("%.2fcm", this.r.getPerfilCalculo().getLarguraAba() / 10);
+                tAba = String.format("%.2fcm", this.r.getPerfilCalculo().getEspessuraAba() / 10);
                 esbeltezAba = String.format("%.2f", this.r.getPerfilCalculo().getEsbeltezAba());
                 break;
             case I:
             case H:
             case W:
             case U:
-                bAlma = String.format("%.2fmm", this.r.getPerfilCalculo().getLarguraAlma());
-                tAlma = String.format("%.2fmm", this.r.getPerfilCalculo().getEspessuraAlma());
+                bAlma = String.format("%.2fcm", this.r.getPerfilCalculo().getLarguraAlma() / 10);
+                tAlma = String.format("%.2fcm", this.r.getPerfilCalculo().getEspessuraAlma() / 10);
                 esbeltezAlma = String.format("%.2f", this.r.getPerfilCalculo().getEsbeltezAlma());
-                bMesa = String.format("%.2fmm", this.r.getPerfilCalculo().getLarguraMesa());
-                tMesa = String.format("%.2fmm", this.r.getPerfilCalculo().getEspessuraMesa());
+
+                bMesa = String.format("%.2fcm", this.r.getPerfilCalculo().getLarguraMesa() / 10);
+                bMesaMetade = String.format("%.2fcm", (this.r.getPerfilCalculo().getLarguraMesa() / 2) / 10);
+                tMesa = String.format("%.2fcm", this.r.getPerfilCalculo().getEspessuraMesa() / 10);
                 esbeltezMesa = String.format("%.2f", this.r.getPerfilCalculo().getEsbeltezMesa());
                 break;
         }
