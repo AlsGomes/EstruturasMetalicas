@@ -2,6 +2,7 @@ package br.com.als.classes.calculos.compressao;
 
 import br.com.als.classes.acos.moduloelasticidade.ModuloElasticidadeAco;
 import br.com.als.classes.anexos.anexoe.CoeficienteFlambagem;
+import br.com.als.classes.anexos.anexof.Grupo;
 import br.com.als.classes.perfis.Perfil;
 import br.com.als.classes.perfis.PerfilModel;
 import br.com.als.interfaces.Aco;
@@ -24,7 +25,7 @@ public class FlambagemGlobalX {
         return lambda0;
     }
 
-    public float getX(PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPecaCm, ModuloElasticidadeAco moduloElasticidadeAco) {
+    public float getX(PerfilModel perfilCalculo, Grupo grupoAba, Grupo grupoAlma, Grupo grupoMesa, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPecaCm, ModuloElasticidadeAco moduloElasticidadeAco) {
 
         float moduloElasticidadeKNcm2 = moduloElasticidadeAco.getModuloElasticidadeKNcm2();
         float tensaoEscoamentoKNcm2 = aco.getTensaoEscoamento() / 10;
@@ -39,7 +40,7 @@ public class FlambagemGlobalX {
         this.inerciaUtilizada = momentoInercia;
 
         this.cargaCriticaEuler = (float) ((Math.pow(Math.PI, 2) * moduloElasticidadeKNcm2 * momentoInercia) / Math.pow(le, 2));
-        float q = new FlambagemLocalQ().getQ(perfilCalculo, aco, moduloElasticidadeAco);
+        float q = new FlambagemLocalQ().getQ(perfilCalculo, grupoAba, grupoAlma, grupoMesa, aco, moduloElasticidadeAco);
         float areaBruta = perfilCalculo.getAreaBruta();
         this.lambda0 = (float) Math.sqrt((q * areaBruta * tensaoEscoamentoKNcm2) / (this.cargaCriticaEuler));
 
@@ -53,7 +54,7 @@ public class FlambagemGlobalX {
         return x;
     }
 
-    public float getX(float momentoInercia, PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPecaCm, ModuloElasticidadeAco moduloElasticidadeAco) {
+    public float getX(float momentoInercia, PerfilModel perfilCalculo, Grupo grupoAba, Grupo grupoAlma, Grupo grupoMesa, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPecaCm, ModuloElasticidadeAco moduloElasticidadeAco) {
 
         float moduloElasticidadeKNcm2 = moduloElasticidadeAco.getModuloElasticidadeKNcm2();
         float tensaoEscoamentoKNcm2 = aco.getTensaoEscoamento() / 10;
@@ -61,13 +62,9 @@ public class FlambagemGlobalX {
 
         this.inerciaUtilizada = momentoInercia;
         this.cargaCriticaEuler = (float) ((Math.pow(Math.PI, 2) * moduloElasticidadeKNcm2 * momentoInercia) / Math.pow(le, 2));
-        float q = new FlambagemLocalQ().getQ(perfilCalculo, aco, moduloElasticidadeAco);
+        float q = new FlambagemLocalQ().getQ(perfilCalculo, grupoAba, grupoAlma, grupoMesa, aco, moduloElasticidadeAco);
         float areaBruta = perfilCalculo.getAreaBruta();
         this.lambda0 = (float) Math.sqrt((q * areaBruta * tensaoEscoamentoKNcm2) / (this.cargaCriticaEuler));
-
-//        System.out.println("FLAMBAGEM LOCAL Q " + q);
-//        System.out.println("CARGA CRITICA DE EULER " + cargaCriticaEuler);
-//        System.out.println("INDICE DE ESBELTEZ " + indiceEsbeltez);
 
         float x;
         if (this.lambda0 <= 1.5) {

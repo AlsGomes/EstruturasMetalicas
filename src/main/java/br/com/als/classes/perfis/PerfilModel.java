@@ -2,6 +2,8 @@ package br.com.als.classes.perfis;
 
 import br.com.als.classes.anexos.anexof.Grupo;
 
+import java.util.Arrays;
+
 public class PerfilModel {
 
     private String nomePerfil;
@@ -13,34 +15,28 @@ public class PerfilModel {
     private float alturaAlma;
 
     private float larguraAlma;
-//    private float larguraAlma = alturaAlma - (2 * espessuraMesa);
-
     private float larguraAba;
     private float larguraMesa;
 
     private float esbeltezAlma;
-    //    private float esbeltezAlma = larguraAlma / espessuraAlma;
     private float esbeltezAba;
     private float esbeltezMesa;
-//    private float esbeltezMesa = (larguraMesa / 2) / espessuraMesa;
 
     private float moduloResistenciaWx;
     private float moduloResistenciaWy;
 
-    //    private float areaBruta = (2 * ((espessuraMesa / 10) * (larguraMesa / 10))) + ((larguraAlma / 10) * (espessuraMesa / 10));
     private float areaBruta;
     private float pesoPorMetro;
     private float inerciaX;
     private float inerciaY;
     private float raioGiracaoX;
     private float raioGiracaoY;
-    private float raioGiracaoMin;
+    private float raioGiracaoZ;
     private float inerciaZ;
-//    private float inerciaZ = (float) Math.pow(raioGiracaoMin, 2) * areaBruta;
 
-    private Grupo grupoAlma;
-    private Grupo grupoAba;
-    private Grupo grupoMesa;
+    private Grupo grupoAlma[];
+    private Grupo grupoAba[];
+    private Grupo grupoMesa[];
     private Perfil perfil;
 
     public String getNomePerfil() {
@@ -111,23 +107,23 @@ public class PerfilModel {
         return raioGiracaoY;
     }
 
-    public float getRaioGiracaoMin() {
-        return raioGiracaoMin;
+    public float getRaioGiracaoZ() {
+        return raioGiracaoZ;
     }
 
     public float getInerciaZ() {
         return inerciaZ;
     }
 
-    public Grupo getGrupoAlma() {
+    public Grupo[] getGrupoAlma() {
         return grupoAlma;
     }
 
-    public Grupo getGrupoAba() {
+    public Grupo[] getGrupoAba() {
         return grupoAba;
     }
 
-    public Grupo getGrupoMesa() {
+    public Grupo[] getGrupoMesa() {
         return grupoMesa;
     }
 
@@ -219,28 +215,28 @@ public class PerfilModel {
         this.raioGiracaoY = raioGiracaoY;
     }
 
-    public void setRaioGiracaoMin(float raioGiracaoMin) {
-        this.raioGiracaoMin = raioGiracaoMin;
+    public void setRaioGiracaoZ(float raioGiracaoMin) {
+        this.raioGiracaoZ = raioGiracaoMin;
     }
 
     public void setInerciaZ(float inerciaZ) {
         this.inerciaZ = inerciaZ;
     }
 
-    public void setGrupoAlma(Grupo grupoAlma) {
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
+    }
+
+    public void setGrupoAlma(Grupo[] grupoAlma) {
         this.grupoAlma = grupoAlma;
     }
 
-    public void setGrupoAba(Grupo grupoAba) {
+    public void setGrupoAba(Grupo[] grupoAba) {
         this.grupoAba = grupoAba;
     }
 
-    public void setGrupoMesa(Grupo grupoMesa) {
+    public void setGrupoMesa(Grupo[] grupoMesa) {
         this.grupoMesa = grupoMesa;
-    }
-
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
     }
 
     @Override
@@ -265,11 +261,11 @@ public class PerfilModel {
                 ", inerciaY=" + inerciaY +
                 ", raioGiracaoX=" + raioGiracaoX +
                 ", raioGiracaoY=" + raioGiracaoY +
-                ", raioGiracaoMin=" + raioGiracaoMin +
+                ", raioGiracaoMin=" + raioGiracaoZ +
                 ", inerciaZ=" + inerciaZ +
-                ", grupoAlma=" + grupoAlma +
-                ", grupoAba=" + grupoAba +
-                ", grupoMesa=" + grupoMesa +
+                ", grupoAlma=" + Arrays.toString(grupoAlma) +
+                ", grupoAba=" + Arrays.toString(grupoAba) +
+                ", grupoMesa=" + Arrays.toString(grupoMesa) +
                 ", perfil=" + perfil +
                 '}';
     }

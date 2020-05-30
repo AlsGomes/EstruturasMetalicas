@@ -69,7 +69,7 @@ public class CadastroPerfisController implements Initializable {
             txtRaioGiracaoZ,
     };
 
-    JFXTextField textFieldsPerfilIHW[] = new JFXTextField[]{
+    JFXTextField textFieldsPerfilIHWUT[] = new JFXTextField[]{
             txtNomePerfil,
             txtEspessuraAlma,
             txtEspessuraMesa,
@@ -83,10 +83,8 @@ public class CadastroPerfisController implements Initializable {
             txtPesoPorMetro,
             txtInerciaX,
             txtInerciaY,
-            txtInerciaZ,
             txtRaioGiracaoX,
             txtRaioGiracaoY,
-            txtRaioGiracaoZ,
     };
 
     DoubleValidator doubleValidator = new DoubleValidator();
@@ -119,8 +117,8 @@ public class CadastroPerfisController implements Initializable {
         txtInerciaY.setPromptText("Inercia Y (cm4)");
         txtInerciaZ.setPromptText("Inercia Z (cm4)");
         txtRaioGiracaoX.setPromptText("Raio de Giracao x (cm)");
-        txtRaioGiracaoY.setPromptText("Raio de Giracao z (cm)");
-        txtRaioGiracaoZ.setPromptText("Raio de Giracao Minimo (cm)");
+        txtRaioGiracaoY.setPromptText("Raio de Giracao y (cm)");
+        txtRaioGiracaoZ.setPromptText("Raio de Giracao z (cm)");
 
         txtNomePerfil.setLabelFloat(true);
         txtEspessuraAba.setLabelFloat(true);
@@ -270,40 +268,50 @@ public class CadastroPerfisController implements Initializable {
 
         txtModuloResistenciaWx.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                if (txtModuloResistenciaWx.validate()) {
-                    txtModuloResistenciaWy.setText(txtModuloResistenciaWx.getText());
+                if (cboPerfis.getSelectionModel().getSelectedItem() == Perfil.L) {
+                    if (txtModuloResistenciaWx.validate()) {
+                        txtModuloResistenciaWy.setText(txtModuloResistenciaWx.getText());
+                    }
                 }
             }
         });
 
         txtModuloResistenciaWy.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                if (txtModuloResistenciaWy.validate()) {
-                    txtModuloResistenciaWx.setText(txtModuloResistenciaWy.getText());
+                if (cboPerfis.getSelectionModel().getSelectedItem() == Perfil.L) {
+                    if (txtModuloResistenciaWy.validate()) {
+                        txtModuloResistenciaWx.setText(txtModuloResistenciaWy.getText());
+                    }
                 }
             }
         });
 
         txtRaioGiracaoX.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                if (txtRaioGiracaoX.validate()) {
-                    txtRaioGiracaoY.setText(txtRaioGiracaoX.getText());
+                if (cboPerfis.getSelectionModel().getSelectedItem() == Perfil.L) {
+                    if (txtRaioGiracaoX.validate()) {
+                        txtRaioGiracaoY.setText(txtRaioGiracaoX.getText());
+                    }
                 }
             }
         });
 
         txtRaioGiracaoY.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                if (txtRaioGiracaoY.validate()) {
-                    txtRaioGiracaoX.setText(txtRaioGiracaoY.getText());
+                if (cboPerfis.getSelectionModel().getSelectedItem() == Perfil.L) {
+                    if (txtRaioGiracaoY.validate()) {
+                        txtRaioGiracaoX.setText(txtRaioGiracaoY.getText());
+                    }
                 }
             }
         });
 
         txtInerciaX.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                if (txtInerciaX.validate()) {
-                    txtInerciaY.setText(txtInerciaX.getText());
+                if (cboPerfis.getSelectionModel().getSelectedItem() == Perfil.L) {
+                    if (txtInerciaX.validate()) {
+                        txtInerciaY.setText(txtInerciaX.getText());
+                    }
                 }
 
                 if (txtInerciaX.validate() && txtAreaBruta.validate()) {
@@ -317,8 +325,10 @@ public class CadastroPerfisController implements Initializable {
 
         txtInerciaY.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                if (txtInerciaY.validate()) {
-                    txtInerciaX.setText(txtInerciaY.getText());
+                if (cboPerfis.getSelectionModel().getSelectedItem() == Perfil.L) {
+                    if (txtInerciaY.validate()) {
+                        txtInerciaX.setText(txtInerciaY.getText());
+                    }
                 }
 
                 if (txtInerciaY.validate() && txtAreaBruta.validate()) {
@@ -403,11 +413,12 @@ public class CadastroPerfisController implements Initializable {
 
     private void inserirPerfil() {
         PerfilModel perfilModel = new PerfilModel();
+        JsonWriter jsonWriter = new JsonWriter();
 
         switch (cboPerfis.getSelectionModel().getSelectedItem()) {
             case L:
                 perfilModel.setNomePerfil(txtNomePerfil.getText());
-                perfilModel.setEspessuraAba(Float.parseFloat(txtEsbeltezAba.getText()));
+                perfilModel.setEspessuraAba(Float.parseFloat(txtEspessuraAba.getText()));
                 perfilModel.setLarguraAba(Float.parseFloat(txtLarguraAba.getText()));
                 perfilModel.setEsbeltezAba(Float.parseFloat(txtEsbeltezAba.getText()));
                 perfilModel.setModuloResistenciaWx(Float.parseFloat(txtModuloResistenciaWx.getText()));
@@ -419,19 +430,76 @@ public class CadastroPerfisController implements Initializable {
                 perfilModel.setInerciaZ(Float.parseFloat(txtInerciaZ.getText()));
                 perfilModel.setRaioGiracaoX(Float.parseFloat(txtRaioGiracaoX.getText()));
                 perfilModel.setRaioGiracaoY(Float.parseFloat(txtRaioGiracaoY.getText()));
-                perfilModel.setRaioGiracaoMin(Float.parseFloat(txtRaioGiracaoZ.getText()));
-                perfilModel.setGrupoAba(cboGrupo.getSelectionModel().getSelectedItem());
-                perfilModel.setPerfil(Perfil.L);
+                perfilModel.setRaioGiracaoZ(Float.parseFloat(txtRaioGiracaoZ.getText()));
+                perfilModel.setGrupoAba(getGruposPossiveis(cboPerfis.getSelectionModel().getSelectedItem(), ElementoPerfil.ABA));
+                perfilModel.setPerfil(cboPerfis.getSelectionModel().getSelectedItem());
 
-                JsonWriter jsonWriter = new JsonWriter();
                 jsonWriter.createJson(perfilModel);
                 break;
 
             case I:
             case W:
             case H:
+                perfilModel.setNomePerfil(txtNomePerfil.getText());
+                perfilModel.setEspessuraAlma(Float.parseFloat(txtEspessuraAlma.getText()));
+                perfilModel.setEspessuraMesa(Float.parseFloat(txtEspessuraMesa.getText()));
+                perfilModel.setLarguraAlma(Float.parseFloat(txtLarguraAlma.getText()));
+                perfilModel.setLarguraMesa(Float.parseFloat(txtLarguraMesa.getText()));
+                perfilModel.setEsbeltezAlma(Float.parseFloat(txtEsbeltezAlma.getText()));
+                perfilModel.setEsbeltezMesa(Float.parseFloat(txtEsbeltezMesa.getText()));
+                perfilModel.setModuloResistenciaWx(Float.parseFloat(txtModuloResistenciaWx.getText()));
+                perfilModel.setModuloResistenciaWy(Float.parseFloat(txtModuloResistenciaWy.getText()));
+                perfilModel.setAreaBruta(Float.parseFloat(txtAreaBruta.getText()));
+                perfilModel.setPesoPorMetro(Float.parseFloat(txtPesoPorMetro.getText()));
+                perfilModel.setInerciaX(Float.parseFloat(txtInerciaX.getText()));
+                perfilModel.setInerciaY(Float.parseFloat(txtInerciaY.getText()));
+                perfilModel.setRaioGiracaoX(Float.parseFloat(txtRaioGiracaoX.getText()));
+                perfilModel.setRaioGiracaoY(Float.parseFloat(txtRaioGiracaoY.getText()));
+                perfilModel.setGrupoAlma(getGruposPossiveis(cboPerfis.getSelectionModel().getSelectedItem(), ElementoPerfil.ALMA));
+                perfilModel.setGrupoMesa(getGruposPossiveis(cboPerfis.getSelectionModel().getSelectedItem(), ElementoPerfil.MESA));
+                perfilModel.setPerfil(cboPerfis.getSelectionModel().getSelectedItem());
+
+                jsonWriter.createJson(perfilModel);
                 break;
         }
+    }
+
+    private Grupo[] getGruposPossiveis(Perfil perfil, ElementoPerfil elemento) {
+        Grupo grupoRetorno[] = null;
+
+        switch (perfil) {
+            case L:
+                switch (elemento) {
+                    case ABA:
+                        grupoRetorno = new Grupo[]{Grupo.GRUPO3, Grupo.GRUPO4};
+                        break;
+                }
+                break;
+            case T:
+                switch (elemento) {
+                    case ALMA:
+                        grupoRetorno = new Grupo[]{Grupo.GRUPO6};
+                        break;
+                    case MESA:
+                        grupoRetorno = new Grupo[]{Grupo.GRUPO4, Grupo.GRUPO5};
+                        break;
+                }
+                break;
+            case I:
+            case H:
+            case W:
+            case U:
+                switch (elemento) {
+                    case ALMA:
+                        grupoRetorno = new Grupo[]{Grupo.GRUPO2};
+                        break;
+                    case MESA:
+                        grupoRetorno = new Grupo[]{Grupo.GRUPO4, Grupo.GRUPO5};
+                        break;
+                }
+        }
+
+        return grupoRetorno;
     }
 
     private void loadPerfis() {
@@ -455,32 +523,69 @@ public class CadastroPerfisController implements Initializable {
         requiredFieldValidator.setMessage("Campo obrigatorio.");
         vboxContainer.getChildren().clear();
 
+        HBox hBoxMedidas = new HBox();
+        hBoxMedidas.setSpacing(20d);
+
+        HBox hBoxModuloResistencia = new HBox();
+        hBoxModuloResistencia.setSpacing(20d);
+
+        HBox hBoxInercia = new HBox();
+        hBoxInercia.setSpacing(20d);
+
+        HBox hBoxRaioGiracao = new HBox();
+        hBoxRaioGiracao.setSpacing(20d);
+
         switch (perfil) {
             case I:
             case W:
             case H:
-                break;
+            case U:
+            case T:
+                for (JFXTextField field : textFieldsPerfilIHWUT) {
+                    field.setPrefWidth(200d);
+                }
 
+                HBox hBoxMedidas1 = new HBox();
+                hBoxMedidas1.setSpacing(20d);
+
+                HBox hBoxMedidas2 = new HBox();
+                hBoxMedidas2.setSpacing(20d);
+
+                HBox hBoxMedidas3 = new HBox();
+                hBoxMedidas3.setSpacing(20d);
+
+                HBox hBoxMedidas4 = new HBox();
+                hBoxMedidas4.setSpacing(20d);
+
+                hBoxMedidas1.getChildren().addAll(txtNomePerfil);
+                hBoxMedidas2.getChildren().addAll(txtEspessuraAlma, txtLarguraAlma, txtEsbeltezAlma, txtEsbeltezMesa);
+                hBoxMedidas3.getChildren().addAll(txtEspessuraMesa, txtLarguraMesa, txtEsbeltezMesa);
+                hBoxMedidas4.getChildren().addAll(txtPesoPorMetro, txtAreaBruta);
+
+                hBoxModuloResistencia.getChildren().addAll(txtModuloResistenciaWx, txtModuloResistenciaWy);
+
+                hBoxInercia.getChildren().addAll(txtInerciaX, txtInerciaY);
+
+                hBoxRaioGiracao.getChildren().addAll(txtRaioGiracaoX, txtRaioGiracaoY);
+
+                vboxContainer.getChildren().addAll(hBoxMedidas1, hBoxMedidas2, hBoxMedidas3, hBoxMedidas4, hBoxModuloResistencia, hBoxInercia, hBoxRaioGiracao);
+
+                break;
             case L:
                 for (JFXTextField field : textFieldsPerfilL) {
                     field.setPrefWidth(200d);
                 }
 
-                HBox hBoxMedidas = new HBox(txtNomePerfil, txtEspessuraAba, txtLarguraAba, txtPesoPorMetro, txtEsbeltezAba, txtAreaBruta);
-                hBoxMedidas.setSpacing(20d);
+                hBoxMedidas.getChildren().addAll(txtNomePerfil, txtEspessuraAba, txtLarguraAba, txtPesoPorMetro, txtEsbeltezAba, txtAreaBruta);
 
-                HBox hBoxModuloResistencia = new HBox(txtModuloResistenciaWx, txtModuloResistenciaWy);
-                hBoxModuloResistencia.setSpacing(20d);
+                hBoxModuloResistencia.getChildren().addAll(txtModuloResistenciaWx, txtModuloResistenciaWy);
 
-                HBox hBoxInercia = new HBox(txtInerciaX, txtInerciaY, txtInerciaZ);
-                hBoxInercia.setSpacing(20d);
+                hBoxInercia.getChildren().addAll(txtInerciaX, txtInerciaY, txtInerciaZ);
 
-                HBox hBoxRaioGiracao = new HBox(txtRaioGiracaoX, txtRaioGiracaoY, txtRaioGiracaoZ);
-                hBoxRaioGiracao.setSpacing(20d);
+                hBoxRaioGiracao.getChildren().addAll(txtRaioGiracaoX, txtRaioGiracaoY, txtRaioGiracaoZ);
 
                 vboxContainer.getChildren().addAll(hBoxMedidas, hBoxModuloResistencia, hBoxInercia, hBoxRaioGiracao);
                 break;
-
         }
     }
 
@@ -501,7 +606,7 @@ public class CadastroPerfisController implements Initializable {
             case I:
             case H:
             case W:
-                for (JFXTextField field : textFieldsPerfilIHW) {
+                for (JFXTextField field : textFieldsPerfilIHWUT) {
                     if (!field.validate()) {
                         return false;
                     }

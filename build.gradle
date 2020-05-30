@@ -27,5 +27,5 @@ dependencies {
     implementation 'com.jfoenix:jfoenix:9.0.9'
 }
 
-mainClassName = "br.com.als.ui.cadastro.perfis.CadastroPerfisLoader"
-//mainClassName = "br.com.als.main.Launch"
+//mainClassName = "br.com.als.ui.cadastro.perfis.CadastroPerfisLoader"
+mainClassName = "br.com.als.main.Launch"

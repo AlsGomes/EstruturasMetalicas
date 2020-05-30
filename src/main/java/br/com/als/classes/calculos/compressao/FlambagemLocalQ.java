@@ -15,20 +15,17 @@ public class FlambagemLocalQ {
     private float areaEfetiva;
     private float kcGrupo5;
 
-    public float getQ(PerfilModel perfilCalculo, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
-        return getQs(perfilCalculo, aco, moduloElasticidadeAco) * getQa(perfilCalculo, aco, moduloElasticidadeAco);
+    public float getQ(PerfilModel perfilCalculo, Grupo grupoAba, Grupo grupoAlma, Grupo grupoMesa, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
+        return getQs(perfilCalculo, grupoAba, grupoAlma, grupoMesa, aco, moduloElasticidadeAco) * getQa(perfilCalculo, grupoAba, grupoAlma, grupoMesa, aco, moduloElasticidadeAco);
     }
 
-    private float getQa(PerfilModel perfilCalculo, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
+    private float getQa(PerfilModel perfilCalculo, Grupo grupoAba, Grupo grupoAlma, Grupo grupoMesa, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
         float qa = 1;
         float moduloElasticidadeKNcm2 = moduloElasticidadeAco.getModuloElasticidadeKNcm2();
         float tensaoEscoamentoKNcm2 = aco.getTensaoEscoamento() / 10;
 
         Perfil perfil = perfilCalculo.getPerfil();
         float esbeltez = perfilCalculo.getEsbeltezAlma();
-
-//        System.out.println("PERFIL " + perfil);
-//        System.out.println("ESBELTEZ ALMA QA " + esbeltez);
 
         switch (perfil) {
             case T:
@@ -39,8 +36,6 @@ public class FlambagemLocalQ {
             case I:
             case U:
             case H:
-                Grupo grupoAlma = perfilCalculo.getGrupoAlma();
-//                System.out.println("GRUPO DA ALMA " + grupoAlma);
                 if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupoAlma, moduloElasticidadeAco)) {
                     qa = 1;
                 } else {
@@ -52,39 +47,32 @@ public class FlambagemLocalQ {
                             Math.sqrt(moduloElasticidadeKNcm2 / tensao))));
                     this.areaEfetiva = areaBruta - (((perfilCalculo.getLarguraAlma() / 10) - this.larguraEfetiva) * (perfilCalculo.getEspessuraAlma() / 10));
 
-//                    System.out.println("LARGURA EFETIVA " + larguraEfetiva);
-//                    System.out.println("AREA EFETIVA " + areaEfetiva);
-
                     qa = this.areaEfetiva / areaBruta;
                 }
                 break;
         }
 
-//        System.out.println("qa " + qa);
         this.qAA = qa;
         return qa;
     }
 
-    private float getQs(PerfilModel perfilCalculo, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
-
+    private float getQs(PerfilModel perfilCalculo, Grupo grupoAba, Grupo grupoAlma, Grupo grupoMesa, Aco aco, ModuloElasticidadeAco moduloElasticidadeAco) {
         float qs = 1;
         float moduloElasticidadeKNcm2 = moduloElasticidadeAco.getModuloElasticidadeKNcm2();
         float tensaoEscoamentoKNcm2 = aco.getTensaoEscoamento() / 10;
 
         Perfil perfil = perfilCalculo.getPerfil();
         float esbeltez;
-        Grupo grupo;
 
         switch (perfil) {
             case L:
-                grupo = perfilCalculo.getGrupoAba();
                 esbeltez = perfilCalculo.getEsbeltezAba();
 
-                if (grupo.equals(Grupo.GRUPO3) || grupo.equals(Grupo.GRUPO4)) {
-                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                if (grupoAba.equals(Grupo.GRUPO3) || grupoAba.equals(Grupo.GRUPO4)) {
+                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupoAba, moduloElasticidadeAco)) {
                         qs = 1;
                     } else {
-                        if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                        if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupoAba, moduloElasticidadeAco)) {
                             qs = (float) (1.340 - (0.76 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / moduloElasticidadeKNcm2)));
                         } else {
                             qs = (float) ((0.53 * moduloElasticidadeKNcm2) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
@@ -97,26 +85,25 @@ public class FlambagemLocalQ {
             case I:
             case H:
             case U:
-                grupo = perfilCalculo.getGrupoMesa();
                 esbeltez = perfilCalculo.getEsbeltezMesa();
-                if (grupo.equals(Grupo.GRUPO5)) {
+                if (grupoMesa.equals(Grupo.GRUPO5)) {
                     this.kcGrupo5 = CoeficienteKcGrupo5.getKc(perfilCalculo);
 
-                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                    if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupoMesa, moduloElasticidadeAco)) {
                         qs = 1;
                     } else {
-                        if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                        if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupoMesa, moduloElasticidadeAco)) {
                             qs = (float) (1.415 - (0.65 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / (this.kcGrupo5 * moduloElasticidadeKNcm2))));
                         } else {
                             qs = (float) ((0.90 * moduloElasticidadeKNcm2 * this.kcGrupo5) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
                         }
                     }
                 } else {
-                    if (grupo.equals(Grupo.GRUPO4)) {
-                        if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                    if (grupoMesa.equals(Grupo.GRUPO4)) {
+                        if (esbeltez < LimiteEsbeltez.getEsbeltezLim1(perfilCalculo, aco, grupoMesa, moduloElasticidadeAco)) {
                             qs = 1;
                         } else {
-                            if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupo, moduloElasticidadeAco)) {
+                            if (esbeltez < LimiteEsbeltez.getEsbeltezLim2(perfilCalculo, aco, grupoMesa, moduloElasticidadeAco)) {
                                 qs = (float) (1.415 - (0.74 * esbeltez * Math.sqrt(tensaoEscoamentoKNcm2 / (moduloElasticidadeKNcm2))));
                             } else {
                                 qs = (float) ((0.69 * moduloElasticidadeKNcm2) / (tensaoEscoamentoKNcm2 * Math.pow(esbeltez, 2)));
@@ -127,9 +114,6 @@ public class FlambagemLocalQ {
                 break;
 
             case T:
-                Grupo grupoAba = perfilCalculo.getGrupoAba();
-                Grupo grupoAlma = perfilCalculo.getGrupoAlma();
-
                 float esbeltezAlma = perfilCalculo.getEsbeltezAlma();
                 float esbeltezAba = perfilCalculo.getEsbeltezAba();
 

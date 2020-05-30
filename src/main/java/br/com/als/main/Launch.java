@@ -25,25 +25,23 @@ public class Launch extends Application {
         stage.setScene(scene);
         stage.show();
 
-//        PerfilModel perfilCalculo = new PerfilModel();
-//        JsonWriter.createJson(perfilCalculo);
-
-        Aco aco = new G35();
+        Aco aco = new MR250();
         String path = "perfis/%s.json";
-        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "W310x38.7"));
+        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "L 76,2 X 9,07"));
 
         ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao(
                 //314.72f,
                 perfilCalculo
+                , perfilCalculo.getGrupoAba()[0]
+                , null
+                , null
                 , aco
                 , CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO
-                , 600f
+                , 200f
                 , ModuloElasticidadeAco.GPa200
         );
 
         ReportCompressao reportCompressao = new ReportCompressao(resistenciaCompressao);
         reportCompressao.exportarRelatorio();
-
-//        System.out.println(resistenciaCompressao.getResistenciaCompressao());
     }
 }

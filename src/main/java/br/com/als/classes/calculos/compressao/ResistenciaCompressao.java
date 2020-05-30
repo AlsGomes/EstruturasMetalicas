@@ -2,6 +2,7 @@ package br.com.als.classes.calculos.compressao;
 
 import br.com.als.classes.acos.moduloelasticidade.ModuloElasticidadeAco;
 import br.com.als.classes.anexos.anexoe.CoeficienteFlambagem;
+import br.com.als.classes.anexos.anexof.Grupo;
 import br.com.als.classes.perfis.PerfilModel;
 import br.com.als.interfaces.Aco;
 
@@ -23,49 +24,70 @@ public class ResistenciaCompressao {
     private float cargaCriticaEuler;
     private float lambda0;
     private float kcGrupo5;
+    private Grupo grupoAba;
+    private Grupo grupoMesa;
+    private Grupo grupoAlma;
 
     private static final float GAMA_A1 = 1.10f;
 
-    public ResistenciaCompressao(PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
+    public ResistenciaCompressao(PerfilModel perfilCalculo, Grupo grupoAba, Grupo grupoAlma, Grupo grupoMesa, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
         this.perfilCalculo = perfilCalculo;
         this.aco = aco;
         this.vinculo = vinculo;
         this.comprimentoPeca = comprimentoPeca;
         this.moduloElasticidadeAco = moduloElasticidadeAco;
         FlambagemLocalQ fQ = new FlambagemLocalQ();
-        this.flambagemLocalQ = fQ.getQ(perfilCalculo, aco, moduloElasticidadeAco);
+        this.flambagemLocalQ = fQ.getQ(perfilCalculo, grupoAba, grupoAlma, grupoMesa, aco, moduloElasticidadeAco);
         this.qAA = fQ.getqAA();
         this.qAL = fQ.getqAL();
         this.areaEfetiva = fQ.getAreaEfetiva();
         this.larguraEfetiva = fQ.getLarguraEfetiva();
         this.kcGrupo5 = fQ.getKcGrupo5();
         FlambagemGlobalX fX = new FlambagemGlobalX();
-        this.flambagemGlobalX = fX.getX(perfilCalculo, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
+        this.flambagemGlobalX = fX.getX(perfilCalculo, grupoAba, grupoAlma, grupoMesa, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
         this.inerciaUtilizada = fX.getInerciaUtilizada();
         this.cargaCriticaEuler = fX.getCargaCriticaEuler();
         this.lambda0 = fX.getLambda0();
+        this.grupoAba = grupoAba;
+        this.grupoAlma = grupoAlma;
+        this.grupoMesa = grupoMesa;
         calcularCompressao();
     }
 
-    public ResistenciaCompressao(float momentoInercia, PerfilModel perfilCalculo, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
+    public ResistenciaCompressao(float momentoInercia, PerfilModel perfilCalculo, Grupo grupoAba, Grupo grupoAlma, Grupo grupoMesa, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
         this.perfilCalculo = perfilCalculo;
         this.aco = aco;
         this.vinculo = vinculo;
         this.comprimentoPeca = comprimentoPeca;
         this.moduloElasticidadeAco = moduloElasticidadeAco;
         FlambagemLocalQ fQ = new FlambagemLocalQ();
-        this.flambagemLocalQ = fQ.getQ(perfilCalculo, aco, moduloElasticidadeAco);
+        this.flambagemLocalQ = fQ.getQ(perfilCalculo, grupoAba, grupoAlma, grupoMesa, aco, moduloElasticidadeAco);
         this.qAA = fQ.getqAA();
         this.qAL = fQ.getqAL();
         this.areaEfetiva = fQ.getAreaEfetiva();
         this.larguraEfetiva = fQ.getLarguraEfetiva();
         this.kcGrupo5 = fQ.getKcGrupo5();
         FlambagemGlobalX fX = new FlambagemGlobalX();
-        this.flambagemGlobalX = fX.getX(momentoInercia, perfilCalculo, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
+        this.flambagemGlobalX = fX.getX(momentoInercia, perfilCalculo, grupoAba, grupoAlma, grupoMesa, aco, vinculo, comprimentoPeca, moduloElasticidadeAco);
         this.inerciaUtilizada = momentoInercia;
         this.cargaCriticaEuler = fX.getCargaCriticaEuler();
         this.lambda0 = fX.getLambda0();
+        this.grupoAba = grupoAba;
+        this.grupoAlma = grupoAlma;
+        this.grupoMesa = grupoMesa;
         calcularCompressao();
+    }
+
+    public Grupo getGrupoAba() {
+        return grupoAba;
+    }
+
+    public Grupo getGrupoMesa() {
+        return grupoMesa;
+    }
+
+    public Grupo getGrupoAlma() {
+        return grupoAlma;
     }
 
     public float getKcGrupo5() {
