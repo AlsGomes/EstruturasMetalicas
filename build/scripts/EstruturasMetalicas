@@ -80,7 +80,8 @@ case "`uname`" in
     ;;
 esac
 
-CLASSPATH=
+CLASSPATH="\\\"\\\""
+
 
 # Determine the Java command to use to start the JVM.
 if [ -n "$JAVA_HOME" ] ; then
@@ -129,6 +130,7 @@ fi
 if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
     APP_HOME=`cygpath --path --mixed "$APP_HOME"`
     CLASSPATH=`cygpath --path --mixed "$CLASSPATH"`
+    
     JAVACMD=`cygpath --unix "$JAVACMD"`
 
     # We build the pattern for arguments to be converted via cygpath
@@ -178,6 +180,6 @@ save () {
 APP_ARGS=`save "$@"`
 
 # Collect all arguments for the java command, following the shell quoting and substitution rules
-eval set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $ESTRUTURAS_METALICAS_OPTS -classpath "\"$CLASSPATH\"" br.com.als.main.Launch "$APP_ARGS"
+eval set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $ESTRUTURAS_METALICAS_OPTS -classpath "\"$CLASSPATH\"" br.com.als.ui.cadastro.perfis.CadastroPerfisLoader "$APP_ARGS"
 
 exec "$JAVACMD" "$@"

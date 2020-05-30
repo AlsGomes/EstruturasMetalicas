@@ -84,8 +84,9 @@ set CMD_LINE_ARGS=%*
 
 set CLASSPATH=
 
+
 @rem Execute EstruturasMetalicas
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %ESTRUTURAS_METALICAS_OPTS%  -classpath "%CLASSPATH%" br.com.als.main.Launch %CMD_LINE_ARGS%
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %ESTRUTURAS_METALICAS_OPTS%  -classpath "%CLASSPATH%" br.com.als.ui.cadastro.perfis.CadastroPerfisLoader %CMD_LINE_ARGS%
 
 :end
 @rem End local scope for the variables with windows NT shell
