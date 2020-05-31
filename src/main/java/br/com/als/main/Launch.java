@@ -27,14 +27,14 @@ public class Launch extends Application {
 
         Aco aco = new MR250();
         String path = "perfis/%s.json";
-        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "L 76,2 X 9,07"));
+        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "U 152,4 x 15,6"));
 
         ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao(
                 //314.72f,
                 perfilCalculo
-                , perfilCalculo.getGrupoAba()[0]
                 , null
-                , null
+                , perfilCalculo.getGrupoAlma()[0]
+                , perfilCalculo.getGrupoMesa()[0]
                 , aco
                 , CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO
                 , 200f

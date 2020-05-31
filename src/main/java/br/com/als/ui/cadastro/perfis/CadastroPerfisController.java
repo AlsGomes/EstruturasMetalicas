@@ -6,19 +6,14 @@ import br.com.als.classes.perfis.Perfil;
 import br.com.als.classes.perfis.PerfilModel;
 import br.com.als.config.JsonWriter;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.DoubleValidator;
 import com.jfoenix.validation.RequiredFieldValidator;
-import com.jfoenix.validation.base.ValidatorBase;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import javax.xml.validation.Validator;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -440,6 +435,7 @@ public class CadastroPerfisController implements Initializable {
             case I:
             case W:
             case H:
+            case U:
                 perfilModel.setNomePerfil(txtNomePerfil.getText());
                 perfilModel.setEspessuraAlma(Float.parseFloat(txtEspessuraAlma.getText()));
                 perfilModel.setEspessuraMesa(Float.parseFloat(txtEspessuraMesa.getText()));
@@ -503,7 +499,6 @@ public class CadastroPerfisController implements Initializable {
     }
 
     private void loadPerfis() {
-
         cboPerfis.getItems().clear();
 
         for (Perfil perfil : Perfil.values()) {
@@ -518,7 +513,6 @@ public class CadastroPerfisController implements Initializable {
     }
 
     private void loadFields(Perfil perfil) {
-
         doubleValidator.setMessage("Somente numeros racionais.");
         requiredFieldValidator.setMessage("Campo obrigatorio.");
         vboxContainer.getChildren().clear();

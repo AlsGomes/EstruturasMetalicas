@@ -133,6 +133,7 @@ public class ReportCompressao implements Report {
         switch (this.r.getPerfilCalculo().getPerfil()) {
             case T:
                 laTeX += "Q=Q_s";
+                breakLine();
                 esbeltez();
                 breakLine();
                 esbeltez(bMesaMetade, tMesa, esbeltezMesa);
@@ -161,6 +162,7 @@ public class ReportCompressao implements Report {
             case H:
             case W:
                 laTeX += "Q=Q_a Q_s";
+                breakLine();
                 esbeltez();
                 breakLine();
                 esbeltez(bAlma, tAlma, esbeltezAlma);
@@ -177,6 +179,7 @@ public class ReportCompressao implements Report {
                 break;
             case U:
                 laTeX += "Q=Q_a Q_s";
+                breakLine();
                 esbeltez();
                 breakLine();
                 esbeltez(bAlma, tAlma, esbeltezAlma);
