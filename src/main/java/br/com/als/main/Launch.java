@@ -1,15 +1,11 @@
 package br.com.als.main;
 
-import br.com.als.classes.acos.model.ASTMA36;
-import br.com.als.classes.acos.model.G35;
-import br.com.als.classes.acos.model.MR250;
+import br.com.als.classes.acos.model.*;
 import br.com.als.classes.acos.moduloelasticidade.ModuloElasticidadeAco;
 import br.com.als.classes.anexos.anexoe.CoeficienteFlambagem;
 import br.com.als.classes.calculos.compressao.ResistenciaCompressao;
 import br.com.als.classes.perfis.PerfilModel;
 import br.com.als.config.JsonReader;
-import br.com.als.config.JsonWriter;
-import br.com.als.interfaces.Aco;
 import br.com.als.reports.compressao.ReportCompressao;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -25,20 +21,22 @@ public class Launch extends Application {
         stage.setScene(scene);
         stage.show();
 
-        Aco aco = new MR250();
-        String path = "perfis/%s.json";
-        PerfilModel perfilCalculo = JsonReader.read(String.format(path, "U 152,4 x 15,6"));
+        String pathAcos = "acos/%s.json";
+        AcoModel aco = JsonReader.readAco(String.format(pathAcos, "ASTMA36"));
+
+        String pathPerfis = "perfis/%s.json";
+        PerfilModel perfilCalculo = JsonReader.readPerfil(String.format(pathPerfis, "CS H 292mm x 240mm"));
 
         ResistenciaCompressao resistenciaCompressao = new ResistenciaCompressao(
                 //314.72f,
                 perfilCalculo
                 , null
                 , perfilCalculo.getGrupoAlma()[0]
-                , perfilCalculo.getGrupoMesa()[0]
+                , perfilCalculo.getGrupoMesa()[1]
                 , aco
                 , CoeficienteFlambagem.K_RECOMENDADO_D_DUPLO_APOIO
-                , 200f
-                , ModuloElasticidadeAco.GPa200
+                , 650f
+                , ModuloElasticidadeAco.GPa205
         );
 
         ReportCompressao reportCompressao = new ReportCompressao(resistenciaCompressao);

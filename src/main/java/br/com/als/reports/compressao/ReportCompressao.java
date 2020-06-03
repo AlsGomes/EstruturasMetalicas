@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class ReportCompressao implements Report {
 
-    public static final String PATH_REPORTS = "relatorios/Compressão.png";
+    public static final String PATH_REPORTS = "relatorios/Compressao.png";
 
     private ResistenciaCompressao r;
     private String bMesa;

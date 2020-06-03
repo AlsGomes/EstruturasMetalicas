@@ -1,8 +1,7 @@
 package br.com.als.classes.anexos.anexog;
 
-import br.com.als.classes.acos.moduloelasticidade.ModuloElasticidadeAco;
+import br.com.als.classes.acos.model.AcoModel;
 import br.com.als.classes.perfis.PerfilModel;
-import br.com.als.interfaces.Aco;
 
 public class ParametrosMomentoFletor {
 
@@ -12,7 +11,7 @@ public class ParametrosMomentoFletor {
     float esbetezPlastificacao;
     float esbetezInicioEscoamento;
 
-    public float getMr(TipoSecaoEEixoFlexao tipoSecaoEEixoFlexao, EstadoLimiteAplicavel estadoLimiteAplicavel, Aco aco, PerfilModel perfilCalculo) {
+    public float getMr(TipoSecaoEEixoFlexao tipoSecaoEEixoFlexao, EstadoLimiteAplicavel estadoLimiteAplicavel, AcoModel aco, PerfilModel perfilCalculo) {
         switch (tipoSecaoEEixoFlexao) {
             case TIPO_SECAO_E_EIXO_FLEXAO_I:
                 switch (estadoLimiteAplicavel) {

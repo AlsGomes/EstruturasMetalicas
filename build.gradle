@@ -8,6 +8,7 @@ group 'org.example'
 version '1.0-SNAPSHOT'
 
 sourceSets.main.resources.srcDirs("src/main/java").includes.addAll(["**/*.fxml", "**/*.css", "**/*.png"])
+sourceSets.main.resources.srcDirs("relatorios").includes.addAll(["**/*.png","**/*.pdf"])
 sourceSets.main.resources.srcDirs("src/main/resources").includes.addAll(["**/*.*"])
 
 repositories {
@@ -16,7 +17,7 @@ repositories {
 
 javafx {
     version = "14"
-    modules = [ 'javafx.controls','javafx.base','javafx.fxml','javafx.graphics' ]
+    modules = ['javafx.controls', 'javafx.base', 'javafx.fxml', 'javafx.graphics', 'javafx.web']
 }
 
 dependencies {
@@ -25,7 +26,9 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.8.1'
     compile group: 'org.scilab.forge', name: 'jlatexmath', version: '1.0.7'
     implementation 'com.jfoenix:jfoenix:9.0.9'
+    implementation 'com.itextpdf:itext7-core:7.1.11'
 }
 
 //mainClassName = "br.com.als.ui.cadastro.perfis.CadastroPerfisLoader"
-mainClassName = "br.com.als.main.Launch"
+//mainClassName = "br.com.als.main.Launch"
+mainClassName = "br.com.als.ui.calculos.compressao.CalculoCompressaoLoader"

@@ -241,32 +241,6 @@ public class PerfilModel {
 
     @Override
     public String toString() {
-        return "PerfilModel{" +
-                "nomePerfil='" + nomePerfil + '\'' +
-                ", espessuraAlma=" + espessuraAlma +
-                ", espessuraAba=" + espessuraAba +
-                ", espessuraMesa=" + espessuraMesa +
-                ", alturaAlma=" + alturaAlma +
-                ", larguraAlma=" + larguraAlma +
-                ", larguraAba=" + larguraAba +
-                ", larguraMesa=" + larguraMesa +
-                ", esbeltezAlma=" + esbeltezAlma +
-                ", esbeltezAba=" + esbeltezAba +
-                ", esbeltezMesa=" + esbeltezMesa +
-                ", moduloResistenciaWx=" + moduloResistenciaWx +
-                ", moduloResistenciaWy=" + moduloResistenciaWy +
-                ", areaBruta=" + areaBruta +
-                ", pesoPorMetro=" + pesoPorMetro +
-                ", inerciaX=" + inerciaX +
-                ", inerciaY=" + inerciaY +
-                ", raioGiracaoX=" + raioGiracaoX +
-                ", raioGiracaoY=" + raioGiracaoY +
-                ", raioGiracaoMin=" + raioGiracaoZ +
-                ", inerciaZ=" + inerciaZ +
-                ", grupoAlma=" + Arrays.toString(grupoAlma) +
-                ", grupoAba=" + Arrays.toString(grupoAba) +
-                ", grupoMesa=" + Arrays.toString(grupoMesa) +
-                ", perfil=" + perfil +
-                '}';
+        return nomePerfil;
     }
 }

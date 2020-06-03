@@ -1,10 +1,10 @@
 package br.com.als.classes.calculos.compressao;
 
+import br.com.als.classes.acos.model.AcoModel;
 import br.com.als.classes.acos.moduloelasticidade.ModuloElasticidadeAco;
 import br.com.als.classes.anexos.anexoe.CoeficienteFlambagem;
 import br.com.als.classes.anexos.anexof.Grupo;
 import br.com.als.classes.perfis.PerfilModel;
-import br.com.als.interfaces.Aco;
 
 public class ResistenciaCompressao {
 
@@ -17,7 +17,7 @@ public class ResistenciaCompressao {
     private float flambagemGlobalX;
     private float inerciaUtilizada;
     private PerfilModel perfilCalculo;
-    private Aco aco;
+    private AcoModel aco;
     private CoeficienteFlambagem vinculo;
     private float comprimentoPeca;
     private ModuloElasticidadeAco moduloElasticidadeAco;
@@ -30,7 +30,7 @@ public class ResistenciaCompressao {
 
     private static final float GAMA_A1 = 1.10f;
 
-    public ResistenciaCompressao(PerfilModel perfilCalculo, Grupo grupoAba, Grupo grupoAlma, Grupo grupoMesa, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
+    public ResistenciaCompressao(PerfilModel perfilCalculo, Grupo grupoAba, Grupo grupoAlma, Grupo grupoMesa, AcoModel aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
         this.perfilCalculo = perfilCalculo;
         this.aco = aco;
         this.vinculo = vinculo;
@@ -54,7 +54,7 @@ public class ResistenciaCompressao {
         calcularCompressao();
     }
 
-    public ResistenciaCompressao(float momentoInercia, PerfilModel perfilCalculo, Grupo grupoAba, Grupo grupoAlma, Grupo grupoMesa, Aco aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
+    public ResistenciaCompressao(float momentoInercia, PerfilModel perfilCalculo, Grupo grupoAba, Grupo grupoAlma, Grupo grupoMesa, AcoModel aco, CoeficienteFlambagem vinculo, float comprimentoPeca, ModuloElasticidadeAco moduloElasticidadeAco) {
         this.perfilCalculo = perfilCalculo;
         this.aco = aco;
         this.vinculo = vinculo;
@@ -126,7 +126,7 @@ public class ResistenciaCompressao {
         return this.perfilCalculo;
     }
 
-    public Aco getAco() {
+    public AcoModel getAco() {
         return this.aco;
     }
 

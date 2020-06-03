@@ -1,10 +1,10 @@
 package br.com.als.classes.calculos.compressao;
 
+import br.com.als.classes.acos.model.AcoModel;
 import br.com.als.classes.acos.moduloelasticidade.ModuloElasticidadeAco;
 import br.com.als.classes.anexos.anexof.CoeficienteKcGrupo5;
 import br.com.als.classes.anexos.anexof.Grupo;
 import br.com.als.classes.perfis.PerfilModel;
-import br.com.als.interfaces.Aco;
 
 public class LimiteEsbeltez {
 
@@ -14,7 +14,7 @@ public class LimiteEsbeltez {
         return kc;
     }
 
-    public static float getEsbeltezLim1(PerfilModel perfilCalculo, Aco aco, Grupo grupo, ModuloElasticidadeAco moduloElasticidadeAco) {
+    public static float getEsbeltezLim1(PerfilModel perfilCalculo, AcoModel aco, Grupo grupo, ModuloElasticidadeAco moduloElasticidadeAco) {
 
         float esbeltez = 0;
         float moduloElasticidadeKNcm2 = moduloElasticidadeAco.getModuloElasticidadeKNcm2();
@@ -34,7 +34,7 @@ public class LimiteEsbeltez {
                 esbeltez = (float) (0.56 * Math.sqrt(moduloElasticidadeKNcm2 / tensaoEscoamentoKNcm2));
                 break;
             case GRUPO5:
-                kc = CoeficienteKcGrupo5.getKc(perfilCalculo);
+                kc = CoeficienteKcGrupo5.getKc(perfilCalculo.getLarguraAlma(), perfilCalculo.getEspessuraAlma());
                 if (kc < 0.35 || kc > 0.76) {
                     System.out.println(String.format("Verificar coeficiente kc do Grupo5. Valor %s", kc));
                 }
@@ -48,7 +48,7 @@ public class LimiteEsbeltez {
         return esbeltez;
     }
 
-    public static float getEsbeltezLim2(PerfilModel perfilCalculo, Aco aco, Grupo grupo, ModuloElasticidadeAco moduloElasticidadeAco) {
+    public static float getEsbeltezLim2(PerfilModel perfilCalculo, AcoModel aco, Grupo grupo, ModuloElasticidadeAco moduloElasticidadeAco) {
 
         float esbeltez = 0;
         float moduloElasticidadeKNcm2 = moduloElasticidadeAco.getModuloElasticidadeKNcm2();
@@ -71,7 +71,7 @@ public class LimiteEsbeltez {
                 esbeltez = (float) (1.03 * Math.sqrt(moduloElasticidadeKNcm2 / tensaoEscoamentoKNcm2));
                 break;
             case GRUPO5:
-                kc = CoeficienteKcGrupo5.getKc(perfilCalculo);
+                kc = CoeficienteKcGrupo5.getKc(perfilCalculo.getLarguraAlma(), perfilCalculo.getEspessuraAlma());
                 if (kc < 0.35 || kc > 0.76) {
                     System.out.println(String.format("Verificar coeficiente kc do Grupo5. Valor %s", kc));
                 }
